@@ -23,6 +23,7 @@ set undofile
 set wildmenu
 set laststatus=2
 set modelines=0
+
 " security issue
 set nomodeline 
 
@@ -42,9 +43,6 @@ colorscheme dracula
 " Leader shortcuts
 nnoremap <leader>f 1z= 
 nnoremap <leader>s :set spell!<CR> 
-nnoremap <leader>l :Files<CR>
-nnoremap <leader>t :Tags<CR>
-nnoremap <leader>a :Ag
 nnoremap <leader>d :read !date<CR>
 nnoremap <leader>gq :%!pandoc -f html -t markdown<CR>
 vnoremap <leader>gq :!pandoc -f markdown -t html<CR>
@@ -60,26 +58,27 @@ nnoremap <C-l> <C-w>l
 
 " fzf find
 set rtp+=~/.fzf
+nnoremap <leader>l :Files<CR>
+nnoremap <leader>t :Tags<CR>
+nnoremap <leader>a :Ag
 
 " Movement
 nnoremap j gj
 nnoremap k gk
 
-
-nnoremap <buffer> <F9> :exec '!python' shellescape(@%, 1)<cr>
-
-let g:ranger_replace_netrw = 1
-
-" FORMATTERS
+" ALE FORMATTERS
 autocmd FileType javascript setlocal formatprg=prettier\ --stdin
 let g:ale_linters = {
-      \'javascript': ['prettier', 'standard']
+      \ 'javascript': ['prettier', 'standard'],
       \}
-let g:ale_fixers = {'javascript': ['prettier', 'standard']}
+let g:ale_fixers = {'javascript': ['prettier_standard']}
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
 let g:ale_lint_on_save = 1
 let g:ale_fix_on_save = 1
+
+" vinegar
+let g:ranger_replace_netrw = 1
 
 " Vim Wiki
 let g:vimwiki_global_ext=0
