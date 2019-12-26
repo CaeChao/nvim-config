@@ -2,6 +2,7 @@
 syntax on
 set wrapmargin=8
 set number
+set shell=/bin/zsh
 filetype plugin indent on
 set nocompatible
 set ignorecase
@@ -13,6 +14,7 @@ set shiftwidth=2
 set softtabstop=2
 set expandtab
 set autoindent
+set scrolloff=3
 set showmode
 set showcmd
 set showmatch
@@ -23,13 +25,16 @@ set undofile
 set wildmenu
 set laststatus=2
 set modelines=0
+set wrap
+set linebreak
+set formatoptions=qrn1
 
 " security issue
 set nomodeline 
 
 " Basics
 inoremap jk <ESC> 
-let mapleader = ","
+let mapleader = "'"
 
 " Run commands with semicolon
 nnoremap ; :
@@ -44,6 +49,7 @@ colorscheme dracula
 nnoremap <leader>f 1z= 
 nnoremap <leader>s :set spell!<CR> 
 nnoremap <leader>d :read !date<CR>
+nnoremap <leader>tt :TagbarToggle<CR>
 nnoremap <leader>gq :%!pandoc -f html -t markdown<CR>
 vnoremap <leader>gq :!pandoc -f markdown -t html<CR>
 
@@ -66,12 +72,18 @@ nnoremap <leader>a :Ag
 nnoremap j gj
 nnoremap k gk
 
+" Clipboard functionality (paste from system)
+vnoremap  <leader>y "+y
+nnoremap  <leader>y "+y
+nnoremap <leader>p "+p
+vnoremap <leader>p "+p
+
 " ALE FORMATTERS
 autocmd FileType javascript setlocal formatprg=prettier\ --stdin
 let g:ale_linters = {
-      \ 'javascript': ['prettier', 'standard'],
+      \ 'javascript': ['prettier', 'eslint'],
       \}
-let g:ale_fixers = {'javascript': ['prettier_standard']}
+let g:ale_fixers = {'javascript': ['eslint']}
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
 let g:ale_lint_on_save = 1
@@ -83,8 +95,10 @@ let g:ranger_replace_netrw = 1
 " Vim Wiki
 let g:vimwiki_global_ext=0
 autocmd FileType vimwiki set syntax=markdown
-let g:vimwiki_list = [{'path': '~/Documents/MyArchive/MyNoteBook',
-                          \ 'syntax': 'markdown', 'ext': '.md', 'auto_tags': 1}]
+let g:vimwiki_list = [{
+                      \ 'path': '~/Documents/MyArchive/MyNoteBook',
+                      \ 'template_default': 'default',
+                      \ 'syntax': 'markdown', 'ext': '.md', 'auto_tags': 1}]
 nnoremap <leader>c :Calendar<CR>
 nnoremap <leader>st :VimwikiSearchTags
 
@@ -98,6 +112,7 @@ call minpac#init({'package_name': 'myplugins'})
 call minpac#add('k-takata/minpac', {'type': 'opt'})
 
 call minpac#add('junegunn/fzf.vim')
+call minpac#add('junegunn/goyo.vim')
 call minpac#add('itchyny/lightline.vim')
 call minpac#add('tpope/vim-surround')
 call minpac#add('tpope/vim-abolish')
@@ -110,7 +125,7 @@ call minpac#add('mileszs/ack.vim')
 call minpac#add('mattn/calendar-vim')
 call minpac#add('dense-analysis/ale')
 call minpac#add('pangloss/vim-javascript')
+call minpac#add('majutsushi/tagbar')
 
 command! Pu call minpac#update()
 command! Pc call minpac#clean()
-
