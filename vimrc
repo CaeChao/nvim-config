@@ -53,6 +53,11 @@ nnoremap <leader>tt :TagbarToggle<CR>
 nnoremap <leader>gq :%!pandoc -f html -t markdown<CR>
 vnoremap <leader>gq :!pandoc -f markdown -t html<CR>
 
+" Markdown-preview
+let g:instant_markdown_autostart = 0
+nnoremap <leader>mp :InstantMarkdownPreview<CR>
+nnoremap <leader>ms :InstantMarkdownStop<CR>
+
 " Miscellaneous 
 vnoremap . :norm.<CR>
 
@@ -77,6 +82,8 @@ vnoremap  <leader>y "+y
 nnoremap  <leader>y "+y
 nnoremap <leader>p "+p
 vnoremap <leader>p "+p
+nnoremap <leader>d "+d
+vnoremap <leader>d "+d
 
 " ALE FORMATTERS
 autocmd FileType javascript setlocal formatprg=prettier\ --stdin
@@ -103,29 +110,23 @@ nnoremap <leader>c :Calendar<CR>
 nnoremap <leader>st :VimwikiSearchTags
 
 " Plugin Management
-set packpath^=~/.vim
-packadd minpac
-
-call minpac#init({'package_name': 'myplugins'})
-
-" minpac must have {'type': 'opt'} so that it can be loaded with `packadd`.
-call minpac#add('k-takata/minpac', {'type': 'opt'})
-
-call minpac#add('junegunn/fzf.vim')
-call minpac#add('junegunn/goyo.vim')
-call minpac#add('itchyny/lightline.vim')
-call minpac#add('tpope/vim-surround')
-call minpac#add('tpope/vim-abolish')
-call minpac#add('tpope/vim-vinegar')
-call minpac#add('tpope/vim-commentary')
-call minpac#add('vim-pandoc/vim-pandoc')
-call minpac#add('vim-pandoc/vim-pandoc-syntax')
-call minpac#add('vimwiki/vimwiki')
-call minpac#add('mileszs/ack.vim')
-call minpac#add('mattn/calendar-vim')
-call minpac#add('dense-analysis/ale')
-call minpac#add('pangloss/vim-javascript')
-call minpac#add('majutsushi/tagbar')
-
-command! Pu call minpac#update()
-command! Pc call minpac#clean()
+call plug#begin('~/.vim/pack/myplugins/start')
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'junegunn/goyo.vim'
+Plug 'itchyny/lightline.vim'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-vinegar'
+Plug 'tpope/vim-commentary'
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'vimwiki/vimwiki'
+Plug 'mileszs/ack.vim'
+Plug 'mattn/calendar-vim'
+Plug 'dense-analysis/ale'
+Plug 'pangloss/vim-javascript'
+Plug 'majutsushi/tagbar'
+Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+call plug#end()
