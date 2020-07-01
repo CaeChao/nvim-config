@@ -22,6 +22,7 @@ set autochdir
 set undofile          
 set wildmenu
 set laststatus=2
+set hidden
 set wrap
 set linebreak
 set formatoptions=qrn1
@@ -40,7 +41,7 @@ nnoremap ; :
 set nofoldenable
 
 " Aesthetics
-colorscheme dracula
+colorscheme gruvbox
 
 " Airline settings
 let g:airline#extensions#tabline#enabled = 1
@@ -81,6 +82,9 @@ vnoremap <leader>d "+d
 let NERDTreeMinimalUI=1 " Disable bookmark and 'press ? for help' text
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
+" vinegar
+let g:ranger_replace_netrw = 1
+
 " fzf find
 set rtp+=~/.fzf
 nnoremap <leader>l :Files<CR>
@@ -90,18 +94,37 @@ nnoremap <leader>a :Ag
 " Markdown-preview
 let g:instant_markdown_autostart = 0
 
-" Use deoplete
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#sources#ternjs#types = 1
-let g:deoplete#sources#ternjs#depths = 1
-inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
-inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+" AutoCompete
+" deoplete config
+" let g:deoplete#enable_at_startup = 1
+" let g:deoplete#sources#ternjs#types = 1
+" let g:deoplete#sources#ternjs#depths = 1
+" inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
+" inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+" Coc config
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+inoremap <silent><expr> <c-space> coc#refresh()
 
-" gutentags
-let g:gutentags_add_default_project_roots = 0
-let g:gutentags_generate_on_write = 1
-let g:gutentags_project_root = ['.root', '.svn', '.git', 'package.json']
-let g:gutentags_cache_dir = expand('~/.cache/vim/ctags/')
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
+let g:coc_snippet_prev = '<s-tab>'
+" GoTo code navigation Remap.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
 
 " ALE FORMATTERS
 autocmd FileType javascript setlocal formatprg=prettier\ --stdin
@@ -109,16 +132,23 @@ let g:ale_linters = {
       \ 'javascript': ['prettier', 'eslint'],
       \}
 let g:ale_fixers = {
-      \ 'javascript': ['prettier'],
+      \ 'javascript': ['prettier', 'eslint'],
       \ 'css': ['prettier'],
       \}
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
+let g:ale_lint_on_enter = 0
 let g:ale_lint_on_save = 1
 let g:ale_fix_on_save = 1
 
-" vinegar
-let g:ranger_replace_netrw = 1
+" JSDOC
+nmap <silent> <C-A-l> ?function<cr>:noh<cr><Plug>(jsdoc)
+
+" gutentags
+let g:gutentags_add_default_project_roots = 0
+let g:gutentags_generate_on_write = 1
+let g:gutentags_project_root = ['.root', '.svn', '.git', 'package.json']
+let g:gutentags_cache_dir = expand('~/.cache/vim/ctags/')
 
 " Vim Wiki
 let g:vimwiki_global_ext=0
@@ -149,7 +179,6 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 " Coding/Writing
 Plug 'junegunn/goyo.vim'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'dense-analysis/ale'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
@@ -159,6 +188,11 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
+" JavaScript
+Plug 'heavenshell/vim-jsdoc', { 
+  \ 'for': ['javascript', 'javascript.jsx','typescript'], 
+  \ 'do': 'make install'
+\}
 " Git Integration
 Plug 'tpope/vim-fugitive', {'on': ['Gstatus']}
 Plug 'Xuyuanp/nerdtree-git-plugin'
