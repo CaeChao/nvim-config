@@ -46,6 +46,8 @@ colorscheme gruvbox
 " Airline settings
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
 
 " Leader shortcuts
 nnoremap <leader>f 1z= 
@@ -66,6 +68,9 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+nnoremap <silent> <C-j> :bnext<CR>
+nnoremap <silent> <C-k> :bprevious<CR>
+
 " Movement
 nnoremap j gj
 nnoremap k gk
@@ -87,21 +92,22 @@ let g:ranger_replace_netrw = 1
 
 " fzf find
 set rtp+=~/.fzf
-nnoremap <leader>l :Files<CR>
+nnoremap <silent> <C-f> :Files<CR>
 nnoremap <leader>t :Tags<CR>
 nnoremap <leader>a :Ag
+nnoremap <leader>b :Buffers<CR>
 
 " Markdown-preview
 let g:instant_markdown_autostart = 0
 
 " AutoCompete
-" deoplete config
+"# deoplete config
 " let g:deoplete#enable_at_startup = 1
 " let g:deoplete#sources#ternjs#types = 1
 " let g:deoplete#sources#ternjs#depths = 1
 " inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
 " inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
-" Coc config
+"# Coc config
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
@@ -118,25 +124,43 @@ endfunction
 
 let g:coc_snippet_next = '<tab>'
 let g:coc_snippet_prev = '<s-tab>'
-" GoTo code navigation Remap.
+"## GoTo code navigation Remap.
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-" Symbol renaming.
+"## Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+" Remap keys for applying codeAction to the current buffer.
+nmap <leader>do  <Plug>(coc-codeaction)
+
 
 " ALE FORMATTERS
 autocmd FileType javascript setlocal formatprg=prettier\ --stdin
 let g:ale_linters = {
       \ 'javascript': ['prettier', 'eslint'],
+      \ 'typescript': ['tsserver'],
       \}
 let g:ale_fixers = {
       \ 'javascript': ['prettier', 'eslint'],
+      \ 'typescript': ['prettier', 'eslint'],
       \ 'css': ['prettier'],
       \}
 let g:ale_sign_error = '✘'
 let g:ale_sign_warning = '⚠'
+let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_enter = 0
 let g:ale_lint_on_save = 1
 let g:ale_fix_on_save = 1
@@ -149,6 +173,11 @@ let g:gutentags_add_default_project_roots = 0
 let g:gutentags_generate_on_write = 1
 let g:gutentags_project_root = ['.root', '.svn', '.git', 'package.json']
 let g:gutentags_cache_dir = expand('~/.cache/vim/ctags/')
+
+" Coding Syntax
+autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
+autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
+
 
 " Vim Wiki
 let g:vimwiki_global_ext=0
@@ -181,6 +210,9 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'junegunn/goyo.vim'
 Plug 'dense-analysis/ale'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+let g:coc_global_extensions = [
+  \ 'coc-tsserver'
+  \ ]
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-surround'
@@ -188,7 +220,10 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
-" JavaScript
+" Syntax
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
+"" JavaScript
 Plug 'heavenshell/vim-jsdoc', { 
   \ 'for': ['javascript', 'javascript.jsx','typescript'], 
   \ 'do': 'make install'
