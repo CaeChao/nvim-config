@@ -1,0 +1,22 @@
+{
+    "diagnostic.displayByAle": true,
+    "eslint.autoFixOnSave": true,
+    "eslint.filetypes": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+    "coc.preferences.formatOnSaveFiletypes": [
+        "css",
+        "javascript",
+        "javascript.jsx",
+        "javascriptreact",
+        "json",
+        "Markdown",
+        "markdown",
+        "python",
+        "typescript",
+        "typescript.tsx",
+        "typescriptreact",
+        "yaml"
+    ],
+    "prettier.eslintIntegration": true,
+    "tsserver.formatOnType": true,
+    "coc.preferences.formatOnType": true
+}
