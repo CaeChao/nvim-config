@@ -29,6 +29,7 @@ set hidden
 set wrap
 set linebreak
 set formatoptions=qrn1
+set mouse=a
 
 " security issue
 set nomodeline 
@@ -73,6 +74,7 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 nnoremap <silent> <C-j> :bnext<CR>
 nnoremap <silent> <C-k> :bprevious<CR>
+nnoremap <leader>q :b#<bar>bd#<CR>
 
 " Movement
 nnoremap j gj
@@ -148,6 +150,7 @@ endfunction
 autocmd CursorHold * silent call CocActionAsync('highlight')
 " Remap keys for applying codeAction to the current buffer.
 nmap <leader>do  <Plug>(coc-codeaction)
+nmap <leader>lf :CocCommand eslint.executeAutofix<CR>
 
 
 " ALE FORMATTERS
@@ -185,6 +188,7 @@ autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
 " Vim Wiki
 let g:vimwiki_global_ext=0
 autocmd FileType vimwiki set syntax=markdown
+let g:vimwiki_table_mappings=0
 let g:vimwiki_list = [{
                       \ 'path': '~/Dropbox/Apps/vimwiki',
                       \ 'template_default': 'default',
@@ -199,6 +203,8 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'ryanoasis/vim-devicons'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'tpope/vim-vinegar'
 if executable('ctags')
     " plugin to manage your tags
@@ -226,6 +232,7 @@ Plug 'vim-pandoc/vim-pandoc-syntax'
 " Syntax
 Plug 'leafgarland/typescript-vim'
 Plug 'peitalin/vim-jsx-typescript'
+Plug 'pangloss/vim-javascript'
 "" JavaScript
 Plug 'heavenshell/vim-jsdoc', { 
   \ 'for': ['javascript', 'javascript.jsx','typescript'], 
