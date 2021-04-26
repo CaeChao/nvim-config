@@ -1,24 +1,24 @@
 {
-  "diagnostic.displayByAle": true,
-  "eslint.autoFixOnSave": false,
-  "eslint.filetypes": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
-  "coc.preferences.formatOnSaveFiletypes": [
-    "css",
-    "javascript",
-    "javascript.jsx",
-    "javascriptreact",
-    "json",
-    "Markdown",
-    "markdown",
-    "python",
-    "yaml"
-  ],
+  "diagnostic.errorSign": " ",
+  "diagnostic.warningSign": " ",
+  "diagnostic.infoSign": "",
+  "diagnostic.hintSign": " ",
+  "diagnostic.displayByAle": false,
+  "eslint.autoFixOnSave": true,
+  "eslint.format.enable": true,
+  "eslint.probe": ["javascript", "javascriptreact", "typescript", "typescriptreact", "html", "vue", "css"],
+  "coc.preferences.formatOnSaveFiletypes": [],
   "prettier.eslintIntegration": true,
   "tsserver.formatOnType": true,
-  "coc.preferences.formatOnType": true
+  "coc.preferences.formatOnType": true,
+  "languageserver": {
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"],
+      "initializationOptions": {
+        "usePlaceholders": true
+      }
+    }
+  }
 }

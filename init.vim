@@ -1,10 +1,11 @@
 set runtimepath^=~/.vim
+set runtimepath+=~/.vim/pack/myplugins/start/ultisnips
 let &packpath=&runtimepath
 
 " Basic settings
 syntax on
 set wrapmargin=8
-set number
+set number                              " Line numbers
 set shell=/bin/zsh
 set ignorecase
 set smartcase
@@ -13,7 +14,7 @@ set spell spelllang=en_us,cjk
 set softtabstop=2
 set tabstop=2
 set expandtab
-set autoindent
+set autoindent                          " Good auto indent
 set scrolloff=3
 set showmode
 set showcmd
@@ -31,15 +32,16 @@ set formatoptions=qrn1
 set mouse=a
 set nocompatible
 set showtabline=0
-"set shiftwidth=2
-
-" security issue
-set nomodeline 
+set t_Co=256                            " Support 256 colors
+" set shiftwidth=2
+set smarttab
+set nomodeline                          " security issue
 
 " Remap
 inoremap jk <ESC> 
 nnoremap ; :
 let mapleader = "'"
+let g:dispatch_no_maps = 1
 
 " Leader shortcuts
 nnoremap <leader>f 1z= 
@@ -49,8 +51,7 @@ nnoremap <leader>tt :TagbarToggle<CR>
 nnoremap <leader>gq :%!pandoc -f html -t markdown<CR>
 vnoremap <leader>gq :!pandoc -f markdown -t html<CR>
 nnoremap <leader>n :NERDTreeToggle<CR>:wincmd p<CR>
-nnoremap <leader>mp :InstantMarkdownPreview<CR>
-nnoremap <leader>ms :InstantMarkdownStop<CR>
+nnoremap <leader>N :NERDTreeCWD<CR>
 nnoremap <leader>q :b#<bar>bd#<CR>
 
 " Miscellaneous 
@@ -73,6 +74,7 @@ nnoremap <leader>p "+p
 vnoremap <leader>p "+p
 nnoremap <leader>d "+d
 vnoremap <leader>d "+d
+let g:highlightedyank_highlight_duration = 1000
 
 " Folding
 set nofoldenable
@@ -81,8 +83,11 @@ set nofoldenable
 let g:CtrlSpaceDefaultMappingKey = "<C-space> "
 
 " Aesthetics
+let g:gruvbox_italic=1
+let g:gruvbox_contrast_dark = 'medium'
+" set background=dark
+" colorscheme gruvbox8
 colorscheme gruvbox
-let g:gruvbox_contrast_dark = 'soft'
 
 " Airline settings
 let g:airline_powerline_fonts = 1
@@ -97,16 +102,26 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 " vinegar
 let g:ranger_replace_netrw = 1
+let g:NERDTreeHijackNetrw = 0
+let g:ranger_map_keys = 0
 
 " fzf find
 set rtp+=~/.fzf
-nnoremap <silent> <C-f> :Files<CR>
+" nnoremap <silent> <Leader><Leader> :Files<CR>
+nnoremap <silent> <expr> <Leader><Leader> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
+nnoremap <silent> <Leader>C        :Colors<CR>
+nnoremap <silent> <Leader><Enter>  :Buffers<CR>
 nnoremap <leader>t :Tags<CR>
 nnoremap <leader>a :Ag
-nnoremap <leader>b :Buffers<CR>
+"" Mapping selecting mappings
+nmap <leader><tab> <plug>(fzf-maps-n)
+xmap <leader><tab> <plug>(fzf-maps-x)
+omap <leader><tab> <plug>(fzf-maps-o)
 
 " Markdown-preview
-let g:instant_markdown_autostart = 0
+let g:mkdp_filetypes = ['markdown', 'pandoc']
+nmap <leader>mp <Plug>MarkdownPreview
+nmap <leader>ms <Plug>MarkdownPreviewStop
 
 "{{ AutoCompete
 
@@ -116,22 +131,64 @@ let g:instant_markdown_autostart = 0
 " let g:deoplete#sources#ternjs#depths = 1
 
 "# Coc config
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 inoremap <silent><expr> <c-space> coc#refresh()
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+function! s:coc_confirm() abort
+  if pumvisible()
+    return coc#_select_confirm()
+  else
+    return "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+  endif
 endfunction
+" <CR> to handle completion
+inoremap <silent> <CR> <C-r>=<SID>coc_confirm()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 let g:coc_snippet_next = '<tab>'
 let g:coc_snippet_prev = '<s-tab>'
+let g:coc_global_extensions = [
+  \ 'coc-snippets',
+  \ 'coc-actions',
+  \ 'coc-html',
+  \ 'coc-css',
+  \ 'coc-cssmodules',
+  \ 'coc-stylelintplus',
+  \ 'coc-svg',
+  \ 'coc-prettier',
+  \ 'coc-eslint',
+  \ 'coc-tsserver',
+  \ 'coc-emoji',
+  \ 'coc-vimlsp',
+  \ 'coc-xml',
+  \ 'coc-yank',
+  \ 'coc-json',
+  \ 'coc-python',
+  \ 'coc-java'
+  \ ]
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
+command! -nargs=0 Eslint :CocCommand eslint.executeAutofix
+nnoremap <silent> <C-A-l> :call CocAction('format')<CR>
+
 " navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
@@ -142,21 +199,12 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 " Remap keys for applying codeAction to the current buffer.
-nmap <leader>do  <Plug>(coc-codeaction)
-nmap <leader>lf :CocCommand eslint.executeAutofix<CR>
+nmap <leader>do <Plug>(coc-codeaction)
+
 
 "# ALE FORMATTERS
 autocmd FileType javascript setlocal formatprg=prettier\ --stdin
@@ -169,16 +217,21 @@ let g:ale_fixers = {
       \ 'typescript': ['prettier', 'eslint'],
       \ 'css': ['prettier'],
       \}
-let g:ale_sign_error = '✘'
-let g:ale_sign_warning = '⚠'
+let g:ale_sign_error = ''
+let g:ale_sign_warning = ''
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_enter = 0
 let g:ale_lint_on_save = 0
 let g:ale_fix_on_save = 0
 "}}
 
+" Snippets trigger configuration 
+let g:UltiSnipsExpandTrigger="<C-l>"
+let g:UltiSnipsJumpForwardTrigger='<TAB>'
+let g:UltiSnipsJumpBackwardTrigger='<S-TAB>'
+
 " JSDOC
-nmap <silent> <C-A-l> ?function<cr>:noh<cr><Plug>(jsdoc)
+nmap <leader>jd ?function<cr>:noh<cr><Plug>(jsdoc)
 
 " gutentags
 let g:gutentags_add_default_project_roots = 0
@@ -189,16 +242,30 @@ let g:gutentags_cache_dir = expand('~/.cache/vim/ctags/')
 " Coding Syntax
 autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
 autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
+au BufNewFile,BufRead /*.rasi setf css
 
 " VimWiki
 autocmd FileType vimwiki set syntax=markdown.pandoc
 let g:vimwiki_global_ext = 0
 let g:vimwiki_table_mappings=0
+nnoremap <leader>gl :VimwikiGenerateLinks
+nmap <leader>x <Plug>VimwikiToggleListItem
 let g:vimwiki_list = [{
                       \ 'path': '~/MyArchive/vimwiki',
                       \ 'template_default': 'default',
                       \ 'syntax': 'markdown', 'ext': '.md', 'auto_tags': 1}]
+let g:tagbar_type_vimwiki = {
+          \   'ctagstype':'vimwiki'
+          \ , 'kinds':['h:header']
+          \ , 'sro':'&&&'
+          \ , 'kind2scope':{'h':'header'}
+          \ , 'sort':0
+          \ , 'ctagsbin':'~/.vim/pack/myplugins/start/taskwiki/extra/vwtags.py'
+          \ , 'ctagsargs': 'markdown'
+          \ }
 nnoremap <leader>c :Calendar<CR>
+let g:taskwiki_source_tw_colors="yes"
+let g:taskwiki_maplocalleader="'tw"
 
 "{{ Plugins
 call plug#begin('~/.vim/pack/myplugins/start')
@@ -220,28 +287,32 @@ endif
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-ctrlspace/vim-ctrlspace'
-" Coding/Writing
-Plug 'junegunn/goyo.vim'
-Plug 'dense-analysis/ale'
+" Coding
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-let g:coc_global_extensions = [
-  \ 'coc-tsserver'
-  \ ]
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+Plug 'sirver/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'dense-analysis/ale'
+" Edit
+Plug 'junegunn/goyo.vim'
 Plug 'radenling/vim-dispatch-neovim'
 Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-sleuth'
 Plug 'vim-pandoc/vim-pandoc'
-Plug 'vim-pandoc/vim-pandoc-syntax'
 " Syntax
+Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'sheerun/vim-polyglot'
 Plug 'leafgarland/typescript-vim'
 Plug 'peitalin/vim-jsx-typescript'
 Plug 'pangloss/vim-javascript'
-Plug 'mxw/vim-jsx'
-"" JavaScript
+Plug 'MaxMEllon/vim-jsx-pretty'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'elzr/vim-json'
 Plug 'heavenshell/vim-jsdoc', { 
   \ 'for': ['javascript', 'javascript.jsx','typescript'], 
   \ 'do': 'make install'
@@ -250,8 +321,14 @@ Plug 'heavenshell/vim-jsdoc', {
 Plug 'tpope/vim-fugitive', {'on': ['Gstatus']}
 Plug 'Xuyuanp/nerdtree-git-plugin'
 " Others
+Plug 'morhetz/gruvbox'
+Plug 'lifepillar/vim-gruvbox8'
+Plug 'machakann/vim-highlightedyank'
 Plug 'vimwiki/vimwiki'
+Plug 'tools-life/taskwiki'
+Plug 'powerman/vim-plugin-AnsiEsc'
+Plug 'blindFS/vim-taskwarrior'
 Plug 'mattn/calendar-vim'
-Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 call plug#end()
 "}}
