@@ -1,5 +1,5 @@
 set runtimepath^=~/.vim
-set runtimepath+=~/.vim/pack/myplugins/start/ultisnips
+set runtimepath+=~/.vim/plugins/ultisnips
 let &packpath=&runtimepath
 
 " Basic settings
@@ -38,7 +38,9 @@ set smarttab
 set nomodeline                          " security issue
 
 " Remap
-inoremap jk <ESC> 
+inoremap jk <Esc>
+xnoremap jk <Esc>
+cnoremap jk <C-c>
 nnoremap ; :
 let mapleader = "'"
 let g:dispatch_no_maps = 1
@@ -46,7 +48,7 @@ let g:dispatch_no_maps = 1
 " Leader shortcuts
 nnoremap <leader>f 1z= 
 nnoremap <leader>s :set spell!<CR> 
-nnoremap <leader>d :read !date<CR>
+nnoremap <leader>D :read !date<CR>
 nnoremap <leader>tt :TagbarToggle<CR>
 nnoremap <leader>gq :%!pandoc -f html -t markdown<CR>
 vnoremap <leader>gq :!pandoc -f markdown -t html<CR>
@@ -87,7 +89,6 @@ let g:gruvbox_italic=1
 let g:gruvbox_contrast_dark = 'medium'
 " set background=dark
 " colorscheme gruvbox8
-colorscheme gruvbox
 
 " Airline settings
 let g:airline_powerline_fonts = 1
@@ -107,21 +108,25 @@ let g:ranger_map_keys = 0
 
 " fzf find
 set rtp+=~/.fzf
+let g:fzf_preview_window = ['right:50%', 'ctrl-_']
+command! -bang -nargs=* Ag call fzf#vim#ag(<q-args>, $AG_DEFAULT_OPTIONS, fzf#vim#with_preview(), <bang>0)
 " nnoremap <silent> <Leader><Leader> :Files<CR>
 nnoremap <silent> <expr> <Leader><Leader> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
 nnoremap <silent> <Leader>C        :Colors<CR>
 nnoremap <silent> <Leader><Enter>  :Buffers<CR>
 nnoremap <leader>t :Tags<CR>
 nnoremap <leader>a :Ag
+
 "" Mapping selecting mappings
 nmap <leader><tab> <plug>(fzf-maps-n)
 xmap <leader><tab> <plug>(fzf-maps-x)
 omap <leader><tab> <plug>(fzf-maps-o)
 
 " Markdown-preview
-let g:mkdp_filetypes = ['markdown', 'pandoc']
 nmap <leader>mp <Plug>MarkdownPreview
 nmap <leader>ms <Plug>MarkdownPreviewStop
+let g:mkdp_command_for_global = 0
+let g:mkdp_filetypes = ['markdown', 'pandoc', 'vimwiki']
 
 "{{ AutoCompete
 
@@ -187,7 +192,7 @@ let g:coc_global_extensions = [
   \ ]
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 command! -nargs=0 Eslint :CocCommand eslint.executeAutofix
-nnoremap <silent> <C-A-l> :call CocAction('format')<CR>
+nnoremap <silent> F :call CocAction('format')<CR>
 
 " navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
@@ -225,6 +230,15 @@ let g:ale_lint_on_save = 0
 let g:ale_fix_on_save = 0
 "}}
 
+" GV
+function! s:gv_expand()
+   let line = getline('.')
+   GV --name-status
+   call search('\V'.line, 'c')
+   normal! zz
+endfunction
+autocmd! FileType GV nnoremap <buffer> <silent> + :call <sid>gv_expand()<cr>
+
 " Snippets trigger configuration 
 let g:UltiSnipsExpandTrigger="<C-l>"
 let g:UltiSnipsJumpForwardTrigger='<TAB>'
@@ -260,15 +274,18 @@ let g:tagbar_type_vimwiki = {
           \ , 'sro':'&&&'
           \ , 'kind2scope':{'h':'header'}
           \ , 'sort':0
-          \ , 'ctagsbin':'~/.vim/pack/myplugins/start/taskwiki/extra/vwtags.py'
+          \ , 'ctagsbin':'~/.vim/plugins/taskwiki/extra/vwtags.py'
           \ , 'ctagsargs': 'markdown'
           \ }
 nnoremap <leader>c :Calendar<CR>
 let g:taskwiki_source_tw_colors="yes"
 let g:taskwiki_maplocalleader="'tw"
 
-"{{ Plugins
-call plug#begin('~/.vim/pack/myplugins/start')
+" ============================================================================
+" VIM-PLUG PLUGINS {{{
+" ============================================================================
+
+call plug#begin('~/.vim/plugins')
 " Buffer/File/Tag Browsing
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -320,6 +337,7 @@ Plug 'heavenshell/vim-jsdoc', {
 " Git Integration
 Plug 'tpope/vim-fugitive', {'on': ['Gstatus']}
 Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'junegunn/gv.vim'
 " Others
 Plug 'morhetz/gruvbox'
 Plug 'lifepillar/vim-gruvbox8'
@@ -329,6 +347,7 @@ Plug 'tools-life/taskwiki'
 Plug 'powerman/vim-plugin-AnsiEsc'
 Plug 'blindFS/vim-taskwarrior'
 Plug 'mattn/calendar-vim'
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'pandoc', 'vimwiki','vim-plug']}
 call plug#end()
-"}}
+colorscheme gruvbox
+"}}}
