@@ -1,0 +1,1 @@
+/home/fsociety/.vim/autoload/plug.vim
