@@ -27,17 +27,26 @@ end
 
 require("packer").startup({
   function()
-    -- core plugins
+    --  Plugins Manager
     use({ "wbthomason/packer.nvim", event = "VimEnter" })
 
+    -- Icons
     use({ "kyazdani42/nvim-web-devicons", config = [[require('configs.icons')]] })
 
+    -- StatusLine & Bufferline
     use({
       "nvim-lualine/lualine.nvim",
       requires = { "kyazdani42/nvim-web-devicons", opt = true },
       config = function()
         require("configs.lualine")
       end,
+    })
+
+    use({
+      "akinsho/bufferline.nvim",
+      event = "VimEnter",
+      after = "nvim-web-devicons",
+      config = [[require('configs.bufferline')]],
     })
 
     -- Syntax
@@ -52,17 +61,15 @@ require("packer").startup({
     use({ "norcalli/nvim-colorizer.lua", config = [[require('configs.others').colorizer()]] })
 
     use({
-      "akinsho/bufferline.nvim",
-      event = "VimEnter",
-      after = "nvim-web-devicons",
-      config = [[require('configs.bufferline')]],
-    })
-
-    use({
       "lukas-reineke/indent-blankline.nvim",
       event = "VimEnter",
       config = [[require('configs.others').blankline()]],
     })
+
+    use({ "vim-pandoc/vim-pandoc", ft = { "markdown" } })
+    use({ "vim-pandoc/vim-pandoc-syntax", ft = { "markdown" } })
+    use({ "elzr/vim-json", ft = { "json", "markdown" } })
+    use({ "chrisbra/csv.vim", ft = { "csv" } })
 
     -- Git Integration
     use({
@@ -72,7 +79,7 @@ require("packer").startup({
     })
     use({ "tpope/vim-fugitive", event = "User InGitRepo" })
 
-    -- file managing , picker etc
+    -- File explorer, picker etc
     use({
       "kyazdani42/nvim-tree.lua",
       cmd = { "NvimTreeToggle", "NvimTreeFocus" },
@@ -153,10 +160,8 @@ require("packer").startup({
     use({ "romainl/vim-cool", event = "VimEnter" }) -- Clear highlight search automatically
     use({ "andymass/vim-matchup", opt = true })
 
-    -- Markdown
-    use({ "vim-pandoc/vim-pandoc", ft = { "markdown" } })
-    use({ "vim-pandoc/vim-pandoc-syntax", ft = { "markdown" } })
-    use({ "elzr/vim-json", ft = { "json", "markdown" } })
+    -- Markdown utils
+
     use({
       "iamcco/markdown-preview.nvim",
       run = function()
@@ -165,14 +170,24 @@ require("packer").startup({
       ft = { "markdown", "pandoc", "vimwiki", "vim-plug" },
     })
 
-    -- Only install these plugins if ctags are installed on the system
+    -- Tags
     if utils.executable("ctags") then
-      -- plugin to manage your tags
+      -- Tags manager
       use({ "ludovicchabant/vim-gutentags", event = "VimEnter" })
       -- show file tags in vim window
       use({ "liuchengxu/vista.vim", cmd = "Vista" })
       use({ "majutsushi/tagbar", cmd = { "TagbarToggle", "TagbarOpen" } })
     end
+
+    -- Move & Search & Replace
+    use({
+      "karb94/neoscroll.nvim",
+      config = function()
+        require("neoscroll").setup()
+      end,
+    })
+
+    use({ "kevinhwang91/nvim-hlslens", event = "VimEnter" })
 
     -- UI
     use({ "sainnhe/gruvbox-material", opt = true })

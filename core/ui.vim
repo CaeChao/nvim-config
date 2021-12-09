@@ -38,7 +38,7 @@ let s:theme2dir = {
       \ }
 
 " let s:theme = utils#RandElement(keys(s:theme2dir))
-let s:theme = 'nvcode_gruvbox'
+let s:theme = 'gruvbox_material'
 let s:colorscheme_func = printf('s:theme_packs.%s()', s:theme)
 
 if !has_key(s:theme_packs, s:theme)

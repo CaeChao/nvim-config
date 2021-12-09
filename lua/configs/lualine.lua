@@ -51,11 +51,11 @@ require("lualine").setup({
     },
     lualine_b = {
       "branch",
-      { "diff", source = diff_source },
+      { "diff", symbols = { added = " ", modified = " ", removed = " " }, source = diff_source },
     },
     lualine_c = {
-      { "diagnostics", sources = { "nvim_lsp", "coc" } },
       "filename",
+      { "diagnostics", sources = { "nvim_lsp", "coc" } },
       lsp_progress,
     },
     lualine_x = { "encoding", "filetype" },

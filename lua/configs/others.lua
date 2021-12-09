@@ -8,10 +8,10 @@ end
 
 M.blankline = function()
   require("indent_blankline").setup({
-    char = "|",
+    char = "▏",
     show_trailing_blankline_indent = false,
     show_first_indent_level = false,
-    space_char_blankline = " ",
+    -- space_char_blankline = " ",
     indentLine_enabled = 1,
     filetype_exclude = {
       "help",
@@ -61,11 +61,11 @@ end
 M.gitsigns = function()
   require("gitsigns").setup({
     signs = {
-      add = { hl = "DiffAdd", text = "│", numhl = "GitSignsAddNr" },
-      change = { hl = "DiffChange", text = "│", numhl = "GitSignsChangeNr" },
-      delete = { hl = "DiffDelete", text = "", numhl = "GitSignsDeleteNr" },
-      topdelete = { hl = "DiffDelete", text = "‾", numhl = "GitSignsDeleteNr" },
-      changedelete = { hl = "DiffChangeDelete", text = "~", numhl = "GitSignsChangeNr" },
+      add = {hl = "GitSignsAdd", text = "", numhl = "GitSignsAddNr", linehl = "GitSignsAddLn"},
+      change = {hl = "GitSignsChange", text = "", numhl = "GitSignsChangeNr", linehl = "GitSignsChangeLn"},
+      delete = {hl = "GitSignsDelete", text = "", numhl = "GitSignsDeleteNr", linehl = "GitSignsDeleteLn"},
+      topdelete = { hl = "DiffDelete", text = "", numhl = "GitSignsDeleteNr" },
+      changedelete = { hl = "DiffChangeDelete", text = "", numhl = "GitSignsChangeNr" },
     },
   })
 end
