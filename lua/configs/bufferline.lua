@@ -1,6 +1,5 @@
 require('bufferline').setup{
    options = {
-      offsets = { { filetype = 'NvimTree', text = '', padding = 1 } },
       buffer_close_icon = '',
       modified_icon = '',
       close_icon = '',
@@ -22,7 +21,7 @@ require('bufferline').setup{
           filetype = 'NvimTree',
           text = 'Explorer',
           highlight = 'Directory',
-          text_align = 'center'
+          text_align = 'center',
         }
       },
       custom_filter = function(bufnr)

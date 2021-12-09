@@ -19,4 +19,3 @@ let g:config_file_list = [
 for s:fname in g:config_file_list
   execute printf('source %s/core/%s', stdpath('config'), s:fname)
 endfor
-

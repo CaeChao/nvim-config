@@ -34,36 +34,34 @@ local function diff_source()
     return {
       added = gitsigns.added,
       modified = gitsigns.changed,
-      removed = gitsigns.removed
+      removed = gitsigns.removed,
     }
   end
 end
 
-
-require('lualine').setup({ 
-    options = {
-      -- theme = 'gruvbox-material',
-      component_separators = '|',
-      section_separators = { left = '', right = '' },
+require("lualine").setup({
+  options = {
+    -- theme = 'gruvbox-material',
+    component_separators = "|",
+    section_separators = { left = "", right = "" },
+  },
+  sections = {
+    lualine_a = {
+      { "mode", separator = { left = "" }, right_padding = 2 },
     },
-    sections = {
-      lualine_a = { 
-        { 'mode', separator = { left = '' }, right_padding = 2 },
-      },
-      lualine_b = { 
-          'branch', 
-          {'diff', source = diff_source}, 
-      },
-      lualine_c = {
-          { 'diagnostics', sources={'nvim_lsp', 'coc'} },
-          'filename',
-          lsp_progress
-      },
-      lualine_x = {'encoding', 'filetype'},
-      lualine_y = {'progress'},
-      lualine_z = {
-        { 'location', separator = { right = '' }, left_padding = 2 },
-      },
-    },  
+    lualine_b = {
+      "branch",
+      { "diff", source = diff_source },
+    },
+    lualine_c = {
+      { "diagnostics", sources = { "nvim_lsp", "coc" } },
+      "filename",
+      lsp_progress,
+    },
+    lualine_x = { "encoding", "filetype" },
+    lualine_y = { "progress" },
+    lualine_z = {
+      { "location", separator = { right = "" }, left_padding = 2 },
+    },
+  },
 })
-

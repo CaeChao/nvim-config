@@ -4,7 +4,7 @@ function M.show_line_diagnostics()
   local opts = {
     focusable = false,
     close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-    border = 'single'
+    border = "single",
   }
   vim.lsp.diagnostic.show_line_diagnostics(opts)
 end
@@ -30,7 +30,7 @@ local custom_attach = function(client, bufnr)
   buf_set_keymap("n", "<space>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
   buf_set_keymap("n", "<space>wl", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", opts)
   buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-  buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+  buf_set_keymap("n", "gr", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", opts)
   buf_set_keymap("n", "gy", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
   buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
   buf_set_keymap("n", "ge", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
@@ -39,6 +39,7 @@ local custom_attach = function(client, bufnr)
   buf_set_keymap("n", "<space>q", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
   buf_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
 
+  vim.o.updatetime = 250
   vim.cmd([[
     autocmd CursorHold <buffer> lua require('configs.lsp').show_line_diagnostics()
   ]])
@@ -65,13 +66,13 @@ local custom_attach = function(client, bufnr)
     ]])
   end
 
-  if vim.g.logging_level == 'debug' then
+  if vim.g.logging_level == "debug" then
     local msg = string.format("Language server %s started!", client.name)
-    vim.notify(msg, 'info', {title = 'Nvim-config'})
+    vim.notify(msg, "info", { title = "Nvim-config" })
   end
 end
 
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown", "plaintext" }
 capabilities.textDocument.completion.completionItem.commitCharactersSupport = true
@@ -80,9 +81,19 @@ capabilities.textDocument.completion.completionItem.tagSupport = { valueSet = { 
 lspconfig.tsserver.setup({
   init_options = require("nvim-lsp-ts-utils").init_options,
   on_attach = function(client, bufnr)
+    client.resolved_capabilities.document_formatting = false
+    client.resolved_capabilities.document_range_formatting = false
     local ts_utils = require("nvim-lsp-ts-utils")
     ts_utils.setup({
-      debug = true,
+      eslint_bin = "eslint_d",
+      enable_formatting = true,
+      formatter = "eslint_d",
+      formatter_args = {
+        "--fix-to-stdout",
+        "--stdin",
+        "--stdin-filename",
+        "$FILENAME",
+      },
     })
     ts_utils.setup_client(client)
 
@@ -98,16 +109,26 @@ local null_ls = require("null-ls")
 null_ls.config({
   debug = true,
   sources = {
-    null_ls.builtins.diagnostics.eslint_d,
-    null_ls.builtins.code_actions.eslint_d,
-    null_ls.builtins.formatting.prettier,
-    null_ls.builtins.formatting.stylua,
+    null_ls.builtins.diagnostics.eslint_d.with({
+      prefer_local = "node_modules/.bin",
+    }),
+    null_ls.builtins.formatting.eslint_d.with({
+      prefer_local = "node_modules/.bin",
+    }),
+    null_ls.builtins.formatting.prettier.with({
+      prefer_local = "node_modules/.bin",
+      filetypes = { "html", "css", "json", "yaml", "markdown" },
+    }),
+    null_ls.builtins.code_actions.gitsigns,
+    null_ls.builtins.formatting.stylua.with({
+      extra_args = { "--config-path", vim.fn.expand("~/.config/stylua.toml") },
+    }),
     null_ls.builtins.completion.spell,
   },
 })
 
-lspconfig["null-ls"].setup({ 
-  on_attach = custom_attach 
+lspconfig["null-ls"].setup({
+  on_attach = custom_attach,
 })
 
 lspconfig.pylsp.setup({
@@ -148,7 +169,6 @@ lspconfig.vimls.setup({
   },
   capabilities = capabilities,
 })
-
 
 -- lspconfig.eslint.setup({
 --   on_attach = custom_attach,
@@ -195,9 +215,12 @@ if vim.g.is_mac or vim.g.is_linux and sumneko_binary_path ~= "" then
   })
 end
 
+-- Lsp Handlers
+
 -- replace the default lsp diagnostic symbols
 local function lspSymbol(name, icon)
-   vim.fn.sign_define("LspDiagnosticsSign" .. name, { text = icon, texthl = "LspDiagnosticsDefault" .. name })
+  local hl = "DiagnosticSign" .. name
+  vim.fn.sign_define(hl, { text = icon, numhl = hl, texthl = hl })
 end
 
 lspSymbol("Error", "")
@@ -207,8 +230,13 @@ lspSymbol("Hint", "")
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
   virtual_text = {
-    source = "always",  -- Or "if_many"
-  }
+    source = "always", -- Or "if_many"
+    prefix = "●",
+    spacing = 0,
+  },
+  signs = true,
+  underline = true,
+  update_in_insert = false, -- update diagnostics insert mode
 })
 
 -- Refs: https://github.com/neovim/nvim-lspconfig/wiki/UI-customization#show-source-in-diagnostics
