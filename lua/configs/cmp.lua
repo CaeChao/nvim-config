@@ -6,8 +6,6 @@ local function prequire(...)
   return nil
 end
 -- Setup nvim-cmp.
-local luasnip = prequire("luasnip")
-local lspkind = require("lspkind")
 local cmp = prequire("cmp")
 
 local has_words_before = function()
@@ -18,7 +16,7 @@ end
 cmp.setup({
   snippet = {
     expand = function(args)
-      luasnip.lsp_expand(args.body)
+      require("luasnip").lsp_expand(args.body)
     end,
   },
   mapping = {
@@ -28,8 +26,7 @@ cmp.setup({
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
     ["<C-Space>"] = cmp.mapping.complete(),
     ["<CR>"] = cmp.mapping.confirm({
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
+      select = false,
     }),
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
@@ -71,7 +68,7 @@ cmp.setup({
     ghost_text = false,
   },
   formatting = {
-    format = lspkind.cmp_format({
+    format = require("lspkind").cmp_format({
       with_text = true,
       menu = {
         nvim_lsp = "[LSP]",

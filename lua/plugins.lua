@@ -145,7 +145,6 @@ require("packer").startup({
 
     --
     -- Edit
-    -- use {'karb94/neoscroll.nvim'}
     use({ "windwp/nvim-autopairs", after = "nvim-cmp", config = [[require('configs.others').autopairs()]] })
     use({ "tpope/vim-unimpaired", event = "VimEnter" })
     use({ "tpope/vim-repeat", event = "VimEnter" })
