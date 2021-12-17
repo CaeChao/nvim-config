@@ -6,7 +6,6 @@ function! s:theme_packs.gruvbox_material() dict abort
   let g:gruvbox_material_visual = 'grey background'
   let g:gruvbox_material_cursor = 'green'
   let g:gruvbox_material_sign_column_background = 'none'
-  let g:gruvbox_material_statusline_style = 'mix'
   let g:gruvbox_material_better_performance = 1
   let g:gruvbox_material_enable_italic = 1
   let g:gruvbox_material_disable_italic_comment = 1

@@ -5,9 +5,14 @@ function lsp_progress()
     local percentage = Lsp.percentage or 0
     local title = Lsp.title or ""
     local spinners = {
-      "",
-      "",
-      "",
+      "🌑 ",
+      "🌒 ",
+      "🌓 ",
+      "🌔 ",
+      "🌕 ",
+      "🌖 ",
+      "🌗 ",
+      "🌘 ",
     }
 
     local success_icon = {
@@ -42,23 +47,45 @@ end
 require("lualine").setup({
   options = {
     -- theme = 'gruvbox-material',
-    component_separators = "|",
-    section_separators = { left = "", right = "" },
+    component_separators = { left = "|", right = "|" },
+    section_separators = { left = " ", right = "" },
   },
   sections = {
     lualine_a = {
-      { "mode", separator = { left = "" }, right_padding = 2 },
+      { "mode", left_padding = 0, right_padding = 1 },
     },
     lualine_b = {
-      "branch",
-      { "diff", symbols = { added = " ", modified = " ", removed = " " }, source = diff_source },
+      { "filetype", icon_only = true, separator = "" },
+      { "filename", file_status = true },
     },
     lualine_c = {
-      "filename",
-      { "diagnostics", sources = { "nvim_lsp", "coc" } },
+      {
+        "diagnostics",
+        sources = { "nvim_diagnostic", "coc" },
+        diagnostics_color = {
+          error = { fg = "#db4b4b" },
+          warn = { fg = "#e0af68" },
+          info = { fg = "#0db9d7" },
+          hint = { fg = "#10B981" },
+        },
+        symbols = {
+          error = " ",
+          warn = " ",
+          info = " ",
+          hint = " ",
+        },
+      },
       lsp_progress,
     },
-    lualine_x = { "encoding", "filetype" },
+    lualine_x = {
+      {
+        "diff",
+        symbols = { added = " ", modified = " ", removed = " " },
+        source = diff_source,
+        separator = "",
+      },
+      "branch",
+    },
     lualine_y = { "progress" },
     lualine_z = {
       { "location", separator = { right = "" }, left_padding = 2 },

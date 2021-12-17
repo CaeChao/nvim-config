@@ -128,7 +128,6 @@ require("packer").startup({
 
     -- LSP
     use({ "neovim/nvim-lspconfig", after = "cmp-nvim-lsp", config = [[require('configs.lsp')]] })
-    use({ "folke/lsp-colors.nvim", config = [[require('configs.others').lspcolors()]] })
 
     use({ "folke/trouble.nvim", config = require("trouble").setup({}) })
 

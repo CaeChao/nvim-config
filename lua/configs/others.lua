@@ -60,15 +60,6 @@ M.colorizer = function()
   })
 end
 
-M.lspcolors = function()
-  require("lsp-colors").setup({
-    Error = "#db4b4b",
-    Warning = "#e0af68",
-    Information = "#0db9d7",
-    Hint = "#10B981",
-  })
-end
-
 M.gitsigns = function()
   require("gitsigns").setup({
     signs = {

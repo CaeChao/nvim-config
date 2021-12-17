@@ -4,10 +4,13 @@ function M.show_line_diagnostics()
   local opts = {
     focusable = false,
     close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-    border = "single",
+    border = "rounded",
+    source = "always",
+    prefix = " ",
   }
-  vim.lsp.diagnostic.show_line_diagnostics(opts)
+  vim.diagnostic.open_float(nil, opts)
 end
+
 local lspconfig = require("lspconfig")
 
 local custom_attach = function(client, bufnr)
@@ -22,7 +25,7 @@ local custom_attach = function(client, bufnr)
 
   -- Mappings.
   local opts = { noremap = true, silent = true }
-  buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+  buf_set_keymap("n", "gd", "<cmd>lua require('telescope.builtin').lsp_definitions()<CR>", opts)
   buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
   buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
   buf_set_keymap("n", "gk", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
@@ -31,7 +34,7 @@ local custom_attach = function(client, bufnr)
   buf_set_keymap("n", "<space>wl", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", opts)
   buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
   buf_set_keymap("n", "gr", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", opts)
-  buf_set_keymap("n", "gy", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
+  buf_set_keymap("n", "gy", "<cmd>lua require('telescope.builtin').lsp_type_definitions()<CR>", opts)
   buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
   buf_set_keymap("n", "ge", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
   buf_set_keymap("n", "[d", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
@@ -94,6 +97,7 @@ lspconfig.tsserver.setup({
         "--stdin-filename",
         "$FILENAME",
       },
+      filter_out_diagnostics_by_code = { 80001 },
     })
     ts_utils.setup_client(client)
 
@@ -105,30 +109,26 @@ lspconfig.tsserver.setup({
   capabilities = capabilities,
 })
 
-local null_ls = require("null-ls")
-null_ls.config({
+require("null-ls").setup({
   debug = true,
+  on_attach = custom_attach,
   sources = {
-    null_ls.builtins.diagnostics.eslint_d.with({
+    require("null-ls").builtins.diagnostics.eslint_d.with({
       prefer_local = "node_modules/.bin",
     }),
-    null_ls.builtins.formatting.eslint_d.with({
+    require("null-ls").builtins.formatting.eslint_d.with({
       prefer_local = "node_modules/.bin",
     }),
-    null_ls.builtins.formatting.prettier.with({
+    require("null-ls").builtins.formatting.prettier.with({
       prefer_local = "node_modules/.bin",
       filetypes = { "html", "css", "json", "yaml", "markdown" },
     }),
-    null_ls.builtins.code_actions.gitsigns,
-    null_ls.builtins.formatting.stylua.with({
+    require("null-ls").builtins.code_actions.gitsigns,
+    require("null-ls").builtins.formatting.stylua.with({
       extra_args = { "--config-path", vim.fn.expand("~/.config/stylua.toml") },
     }),
-    null_ls.builtins.completion.spell,
+    require("null-ls").builtins.completion.spell,
   },
-})
-
-lspconfig["null-ls"].setup({
-  on_attach = custom_attach,
 })
 
 lspconfig.pylsp.setup({
@@ -228,22 +228,20 @@ lspSymbol("Warn", "")
 lspSymbol("Info", "")
 lspSymbol("Hint", "")
 
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-  virtual_text = {
-    prefix = "●",
-    spacing = 0,
-  },
+-- vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+
+vim.diagnostic.config({
+  virtual_text = false,
   signs = true,
-  underline = true,
+  underline = false,
   update_in_insert = false, -- update diagnostics insert mode
 })
 
--- Refs: https://github.com/neovim/nvim-lspconfig/wiki/UI-customization#show-source-in-diagnostics
-
--- The following settings works with the bleeding edge neovim.
 -- See https://github.com/neovim/neovim/pull/13998.
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
   border = "rounded",
 })
+
+vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
 
 return M
