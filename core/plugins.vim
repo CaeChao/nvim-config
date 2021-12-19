@@ -27,14 +27,22 @@ let g:vimwiki_list = [{
                       \ 'auto_tags': 1,
                       \ 'nested_syntaxes': {'python': 'python', 'c++': 'cpp'}
                       \ }]
-let g:tagbar_type_vimwiki = {
-          \   'ctagstype':'vimwiki'
-          \ , 'kinds':['h:header']
-          \ , 'sro':'&&&'
-          \ , 'kind2scope':{'h':'header'}
-          \ , 'sort':0
-          \ , 'ctagsbin':'~/.local/share/nvim/site/pack/taskwiki/extra/vwtags.py'
-          \ , 'ctagsargs': 'markdown'
-          \ }
+
+let g:vista_default_executive = 'ctags'
+let g:vista_executive_for = {
+      \ 'javascript': 'nvim_lsp',
+      \ 'typescript': 'nvim_lsp',
+      \ 'javascriptreact': 'nvim_lsp',
+      \ 'typescriptreact': 'nvim_lsp',
+      \ 'tsx': 'nvim_lsp',
+      \ 'vimwiki': 'markdown',
+      \ 'pandoc': 'markdown',
+      \ 'markdown': 'toc',
+      \ }
+
+ let g:vista_ctags_cmd = {
+    \ 'vimwiki': '~/.local/share/nvim/site/pack/packer/opt/taskwiki/extra/vwtags.py'
+    \ }
+
 let g:taskwiki_source_tw_colors="yes"
 "}}

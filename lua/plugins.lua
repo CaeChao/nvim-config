@@ -165,7 +165,7 @@ require("packer").startup({
       run = function()
         fn["mkdp#util#install"]()
       end,
-      ft = { "markdown", "pandoc", "vimwiki", "vim-plug" },
+      ft = { "markdown", "pandoc", "vimwiki" },
     })
 
     -- Tags
@@ -174,7 +174,6 @@ require("packer").startup({
       use({ "ludovicchabant/vim-gutentags", event = "VimEnter" })
       -- show file tags in vim window
       use({ "liuchengxu/vista.vim", cmd = "Vista" })
-      use({ "majutsushi/tagbar", cmd = { "TagbarToggle", "TagbarOpen" } })
     end
 
     -- Move & Search & Replace

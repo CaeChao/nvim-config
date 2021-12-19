@@ -10,7 +10,7 @@ let g:dispatch_no_maps = 1
 nnoremap <leader>f 1z= 
 nnoremap <leader>s :set spell!<CR>
 nnoremap <leader>D :read !date<CR>
-nnoremap <leader>t :TagbarToggle<CR>
+nnoremap <leader>t :Vista!!<CR>
 nnoremap <leader>gq :%!pandoc -f html -t markdown<CR>
 vnoremap <leader>gq :!pandoc -f markdown -t html<CR>
 nnoremap <leader>n :NvimTreeToggle<CR>:wincmd p<CR>
