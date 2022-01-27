@@ -10,6 +10,8 @@ telescope.setup({
         ["<C-j>"] = actions.move_selection_next,
         ["<C-k>"] = actions.move_selection_previous,
         ["<c-t>"] = trouble.open_with_trouble,
+        ["<Down>"] = require("telescope.actions").cycle_history_next,
+        ["<Up>"] = require("telescope.actions").cycle_history_prev,
       },
       n = {
         ["<c-t>"] = trouble.open_with_trouble,
@@ -52,8 +54,32 @@ telescope.setup({
     winblend = 0,
   },
   pickers = {
+    lsp_definitions = {
+      theme = "dropdown",
+      layout_config = {
+        width = 0.6,
+        height = 0.5,
+      },
+    },
     lsp_references = {
       theme = "dropdown",
+      layout_config = {
+        width = 0.6,
+        height = 0.5,
+      },
+    },
+    find_files = {
+      theme = "dropdown",
+      previewer = false,
+      layout_config = {
+        width = 0.6,
+        height = 0.80,
+      },
+      file_sorter = require("telescope.sorters").get_fuzzy_file,
+      file_ignore_patterns = { "node_modules" },
+      generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
+      path_display = { "truncate" },
+      winblend = 10,
     },
   },
   extensions = {
@@ -63,9 +89,13 @@ telescope.setup({
       override_file_sorter = true, -- override the file sorter
       case_mode = "smart_case", -- or "ignore_case" or "respect_case" the default case_mode is "smart_case"
     },
+    media_files = {
+      filetypes = { "png", "webp", "jpg", "jpeg" },
+      find_cmd = "rg",
+    },
   },
 })
 
 pcall(function()
-  telescope.load_extension("fzf")
+  telescope.load_extension({ "fzf", "media_files" })
 end)

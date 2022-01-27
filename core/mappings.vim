@@ -50,6 +50,7 @@ nnoremap <leader>bd :BufferLineSortByDirectory<CR>
 " Telescope
 nnoremap <silent> <leader><leader> <cmd>lua require('telescope.builtin').find_files()<cr>
 nnoremap <leader>a <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap <leader>m <cmd>lua require('telescope').extensions.media_files.media_files()<cr>
 nnoremap <leader>gs <cmd>lua require('telescope.builtin').grep_string()<cr>
 nnoremap <silent> <leader><Enter> <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <silent> <C-t> <cmd>lua require('telescope.builtin').current_buffer_tags()<cr>

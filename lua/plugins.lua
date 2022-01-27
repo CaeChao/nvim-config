@@ -71,6 +71,8 @@ require("packer").startup({
     use({ "elzr/vim-json", ft = { "json", "markdown" } })
     use({ "chrisbra/csv.vim", ft = { "csv" } })
 
+    use({ "liuchengxu/graphviz.vim", ft = { "gv", "dot" } })
+
     -- Git Integration
     use({
       "lewis6991/gitsigns.nvim",
@@ -97,6 +99,9 @@ require("packer").startup({
         {
           "nvim-telescope/telescope-fzf-native.nvim",
           run = "make",
+        },
+        {
+          "nvim-telescope/telescope-media-files.nvim",
         },
       },
       config = [[require('configs.telescope')]],
