@@ -14,7 +14,7 @@ nnoremap <leader>t :Vista!!<CR>
 nnoremap <leader>gq :%!pandoc -f html -t markdown<CR>
 vnoremap <leader>gq :!pandoc -f markdown -t html<CR>
 nnoremap <leader>n :NvimTreeToggle<CR>:wincmd p<CR>
-nnoremap <leader>q :b#<bar>bd#<CR>
+nnoremap <leader>q :<C-U>bprevious <bar> bdelete #<CR>
 
 " Miscellaneous 
 vnoremap . :norm.<CR>
@@ -53,7 +53,7 @@ nnoremap <leader>a <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>m <cmd>lua require('telescope').extensions.media_files.media_files()<cr>
 nnoremap <leader>gs <cmd>lua require('telescope.builtin').grep_string()<cr>
 nnoremap <silent> <leader><Enter> <cmd>lua require('telescope.builtin').buffers()<cr>
-nnoremap <silent> <C-t> <cmd>lua require('telescope.builtin').current_buffer_tags()<cr>
+nnoremap <silent> <C-t> <cmd>lua require('telescope.builtin').tags()<cr>
 
 " Trouble
 nnoremap <leader>xx <cmd>TroubleToggle<cr>
@@ -77,7 +77,8 @@ endfunction
 autocmd! FileType GV nnoremap <buffer> <silent> + :call <sid>gv_expand()<cr>
 
 " VimWiki
-nnoremap <leader>gl :VimwikiGenerateLinks
+nnoremap <leader>wgl :VimwikiGenerateLinks
+nnoremap <leader>twr :TaskWikiBufferLoad<CR>
 nmap <leader>x <Plug>VimwikiToggleListItem
 nnoremap <leader>c :Calendar<CR>
 let g:taskwiki_maplocalleader="'tw"

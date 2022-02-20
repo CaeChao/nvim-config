@@ -12,9 +12,11 @@ augroup END
 
 autocmd FileType javascript setlocal formatprg=prettier\ --stdin
 
-autocmd FileType vimwiki set syntax=markdown.pandoc
+autocmd FileType vimwiki set syntax=pandoc
 
 function! DisableSTL()
   return ""
 endfunction
 au BufEnter NvimTree setlocal statusline=%!DisableSTL()
+
+autocmd FileType help wincmd L

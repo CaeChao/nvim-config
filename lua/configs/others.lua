@@ -13,7 +13,7 @@ M.autopairs = function()
   require("nvim-autopairs").setup({
     disable_filetype = { "TelescopePrompt", "vim" },
   })
-  
+
   require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
 end
 
@@ -63,9 +63,9 @@ end
 M.gitsigns = function()
   require("gitsigns").setup({
     signs = {
-      add = {hl = "GitSignsAdd", text = "", numhl = "GitSignsAddNr", linehl = "GitSignsAddLn"},
-      change = {hl = "GitSignsChange", text = "", numhl = "GitSignsChangeNr", linehl = "GitSignsChangeLn"},
-      delete = {hl = "GitSignsDelete", text = "", numhl = "GitSignsDeleteNr", linehl = "GitSignsDeleteLn"},
+      add = { hl = "GitSignsAdd", text = "", numhl = "GitSignsAddNr", linehl = "GitSignsAddLn" },
+      change = { hl = "GitSignsChange", text = "", numhl = "GitSignsChangeNr", linehl = "GitSignsChangeLn" },
+      delete = { hl = "GitSignsDelete", text = "", numhl = "GitSignsDeleteNr", linehl = "GitSignsDeleteLn" },
       topdelete = { hl = "DiffDelete", text = "", numhl = "GitSignsDeleteNr" },
       changedelete = { hl = "DiffChangeDelete", text = "", numhl = "GitSignsChangeNr" },
     },

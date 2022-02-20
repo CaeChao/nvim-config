@@ -20,11 +20,18 @@ let g:gutentags_project_root = ['.root', '.svn', '.git', 'package.json']
 "{{ VimWiki settings
 let g:vimwiki_global_ext = 0
 let g:vimwiki_table_mappings=0
+let g:vimwiki_valid_html_tags = 'b,i,s,u,sub,sup,kbd,br,hr, pre, script'
 let g:vimwiki_list = [{
-                      \ 'path': '~/MyArchive/vimwiki',
-                      \ 'template_default': 'default',
-                      \ 'syntax': 'markdown', 'ext': '.md',
+                      \ 'path': '~/Documents/vimwiki',
+                      \ 'path_html': '~/Documents/vimwiki/wiki_html',
+                      \ 'template_path': '~/Documents/vimwiki/templates',
+                      \ 'template_default': 'def_template',
+                      \ 'template_ext': '.html',
+                      \ 'syntax': 'markdown', 
+                      \ 'ext': '.md',
                       \ 'auto_tags': 1,
+                      \ 'generated_links_caption':1,
+                      \ 'custom_wiki2html': '~/Documents/vimwiki/wiki2html.sh',
                       \ 'nested_syntaxes': {'python': 'python', 'c++': 'cpp'}
                       \ }]
 
