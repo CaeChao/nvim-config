@@ -72,4 +72,16 @@ M.gitsigns = function()
   })
 end
 
+M.truezen = function()
+  require("true-zen").setup({
+    ui = {
+      left = {
+        number = true,
+      },
+    },
+    misc = {
+      ui_elements_commands = true,
+    },
+  })
+end
 return M

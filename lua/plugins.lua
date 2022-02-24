@@ -162,6 +162,7 @@ require("packer").startup({
     -- use {'machakann/vim-highlightedyank', event='VimEnter'}
     use({ "romainl/vim-cool", event = "VimEnter" }) -- Clear highlight search automatically
     use({ "andymass/vim-matchup", opt = true })
+    use({ "Pocco81/TrueZen.nvim", config = [[require('configs.others').truezen()]] })
 
     -- Markdown utils
 

@@ -7,7 +7,8 @@ let mapleader = "'"
 let g:dispatch_no_maps = 1
 
 " Leader shortcuts
-nnoremap <leader>f 1z= 
+" nnoremap <leader>f 1z= 
+nnoremap <leader>f :TZAtaraxis<CR>
 nnoremap <leader>s :set spell!<CR>
 nnoremap <leader>D :read !date<CR>
 nnoremap <leader>t :Vista!!<CR>

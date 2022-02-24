@@ -75,9 +75,17 @@ telescope.setup({
         width = 0.6,
         height = 0.80,
       },
-      file_sorter = require("telescope.sorters").get_fuzzy_file,
       file_ignore_patterns = { "node_modules" },
-      generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
+      path_display = { "truncate" },
+      winblend = 10,
+    },
+    buffers = {
+      theme = "dropdown",
+      previewer = false,
+      layout_config = {
+        width = 0.6,
+        height = 0.80,
+      },
       path_display = { "truncate" },
       winblend = 10,
     },
@@ -85,7 +93,7 @@ telescope.setup({
   extensions = {
     fzf = {
       fuzzy = true, -- false will only do exact matching
-      override_generic_sorter = false, -- override the generic sorter
+      override_generic_sorter = true, -- override the generic sorter
       override_file_sorter = true, -- override the file sorter
       case_mode = "smart_case", -- or "ignore_case" or "respect_case" the default case_mode is "smart_case"
     },
