@@ -84,4 +84,9 @@ M.truezen = function()
     },
   })
 end
+
+M.todo = function()
+  require("todo-comments").setup({})
+end
+
 return M

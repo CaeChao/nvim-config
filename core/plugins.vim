@@ -20,7 +20,9 @@ let g:gutentags_project_root = ['.root', '.svn', '.git', 'package.json']
 
 "{{ VimWiki settings
 let g:vimwiki_global_ext = 0
-let g:vimwiki_table_mappings=0
+let g:vimwiki_dir_link = 'index'
+let g:vimwiki_table_mappings = 0
+let g:vimwiki_create_link = 0
 let g:vimwiki_valid_html_tags = 'b,i,s,u,sub,sup,kbd,br,hr, pre, script'
 let g:vimwiki_list = [{
                       \ 'path': '~/Documents/vimwiki',
@@ -35,6 +37,15 @@ let g:vimwiki_list = [{
                       \ 'custom_wiki2html': '~/Documents/vimwiki/wiki2html.sh',
                       \ 'nested_syntaxes': {'python': 'python', 'c++': 'cpp'}
                       \ }]
+let g:vimwiki_key_mappings =
+    \ {
+    \   'links': 0,
+    \ }
+let g:zettel_format = "%title"
+let g:zettel_link_format= "[[%link]]"
+let g:zettel_default_mappings = 0
+let g:zettel_date_format = "%Y-%m-%d"
+
 
 let g:vista_default_executive = 'ctags'
 let g:vista_executive_for = {

@@ -12,7 +12,6 @@ augroup END
 
 autocmd FileType javascript setlocal formatprg=prettier\ --stdin
 
-autocmd FileType vimwiki set syntax=pandoc
 
 function! DisableSTL()
   return ""
@@ -20,3 +19,26 @@ endfunction
 au BufEnter NvimTree setlocal statusline=%!DisableSTL()
 
 autocmd FileType help wincmd L
+
+augroup filetype_vimwiki
+  autocmd!
+  autocmd FileType vimwiki set syntax=pandoc
+  autocmd FileType vimwiki nmap <CR> <Plug>VimwikiFollowLink
+  autocmd FileType vimwiki vmap <CR> <Plug>ZettelNewSelectedMap
+  autocmd FileType vimwiki nmap <S-CR> <Plug>VimwikiSplitLink
+  autocmd FileType vimwiki nmap <C-CR> <Plug>VimwikiVSplitLink
+  autocmd FileType vimwiki nmap + <Plug>VimwikiNormalizeLink
+  autocmd FileType vimwiki vmap + <Plug>ZettelNewSelectedMap
+  autocmd FileType vimwiki nmap <D-CR> <Plug>VimwikiTabnewLink
+  autocmd FileType vimwiki nmap <C-S-CR> <Plug>VimwikiTabnewLink
+  autocmd FileType vimwiki nmap <BS> <Plug>VimwikiGoBackLink
+  autocmd FileType vimwiki nmap <TAB> <Plug>VimwikiNextLink
+  autocmd FileType vimwiki nmap <S-TAB> <Plug>VimwikiPrevLink
+  autocmd FileType vimwiki nmap <leader>wn <Plug>VimwikiGoto
+  autocmd FileType vimwiki nmap <leader>wd <Plug>VimwikiDeleteFile
+  autocmd FileType vimwiki nmap <leader>wr <Plug>VimwikiRenameFile
+  autocmd FileType vimwiki nmap <C-Down> <Plug>VimwikiDiaryNextDay
+  autocmd FileType vimwiki nmap <C-Up> <Plug>VimwikiDiaryPrevDay
+  autocmd FileType vimwiki imap <silent> [[ [[<esc><Plug>ZettelSearchMap
+  autocmd FileType vimwiki nmap T <Plug>ZettelYankNameMap
+augroup END

@@ -78,7 +78,7 @@ endfunction
 autocmd! FileType GV nnoremap <buffer> <silent> + :call <sid>gv_expand()<cr>
 
 " VimWiki
-nnoremap <leader>wgl :VimwikiGenerateLinks
+nnoremap <leader>gl :ZettelGenerateLinks
 nnoremap <leader>twr :TaskWikiBufferLoad<CR>
 nmap <leader>x <Plug>VimwikiToggleListItem
 nnoremap <leader>c :Calendar<CR>

@@ -68,7 +68,7 @@ require("packer").startup({
 
     use({ "vim-pandoc/vim-pandoc", ft = { "markdown" } })
     use({ "vim-pandoc/vim-pandoc-syntax", ft = { "markdown" } })
-    use({ "elzr/vim-json", ft = { "json", "markdown" } })
+    use({ "elzr/vim-json", ft = { "json" } })
     use({ "chrisbra/csv.vim", ft = { "csv" } })
 
     use({ "liuchengxu/graphviz.vim", ft = { "gv", "dot" } })
@@ -107,6 +107,11 @@ require("packer").startup({
       config = [[require('configs.telescope')]],
     })
 
+    use({"junegunn/fzf"})
+    use({"junegunn/fzf.vim"})
+
+
+
     -- snippet engine and snippet template
     use({
       "L3MON4D3/LuaSnip",
@@ -139,9 +144,7 @@ require("packer").startup({
     use({
       "folke/todo-comments.nvim",
       requires = "nvim-lua/plenary.nvim",
-      config = function()
-        require("todo-comments").setup({})
-      end,
+      config = [[require('configs.others').todo()]],
     })
 
     use("jose-elias-alvarez/null-ls.nvim")
@@ -202,7 +205,8 @@ require("packer").startup({
     -- use {'vim-ctrlspace/vim-ctrlspace'}
 
     -- Note Taking
-    use({ "caechao/vimwiki", ft = { "vimwiki", "markdown", "pandoc" } })
+    use({ "vimwiki/vimwiki", ft = { "vimwiki", "markdown", "pandoc" } })
+    use({ "CaeChao/vim-zettel", after = "vimwiki", ft = { "vimwiki", "markdown", "pandoc" } })
     use({ "tools-life/taskwiki", after = "vimwiki", ft = { "vimwiki", "markdown", "pandoc" } })
     use({ "powerman/vim-plugin-AnsiEsc" })
     use({ "blindFS/vim-taskwarrior", after = "vimwiki", ft = { "vimwiki", "markdown", "pandoc" } })
