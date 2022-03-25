@@ -107,10 +107,8 @@ require("packer").startup({
       config = [[require('configs.telescope')]],
     })
 
-    use({"junegunn/fzf"})
-    use({"junegunn/fzf.vim"})
-
-
+    use({ "junegunn/fzf" })
+    use({ "junegunn/fzf.vim" })
 
     -- snippet engine and snippet template
     use({
@@ -159,7 +157,7 @@ require("packer").startup({
     use({ "tpope/vim-surround", event = "VimEnter" })
     use({ "tpope/vim-abolish", event = "VimEnter" })
     use({ "tpope/vim-commentary", event = "VimEnter" })
-    -- use({ "tpope/vim-sleuth", event = "VimEnter" }) -- update has conflicts with packer
+    use({ "tpope/vim-sleuth", event = "VimEnter" })
     use({ "tpope/vim-dispatch", opt = true })
     use({ "radenling/vim-dispatch-neovim", opt = true })
     -- use {'machakann/vim-highlightedyank', event='VimEnter'}

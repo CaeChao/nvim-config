@@ -41,6 +41,7 @@ vnoremap <leader>p "+p
 nnoremap <leader>d "+d
 vnoremap <leader>d "+d
 let g:highlightedyank_highlight_duration = 1000
+nnoremap <leader>cp :let @+=expand('%:p')<CR>
 
 " BufferLine
 nnoremap <silent>>> :BufferLineMoveNext<CR>
