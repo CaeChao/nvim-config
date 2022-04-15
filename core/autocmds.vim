@@ -12,13 +12,21 @@ augroup END
 
 autocmd FileType javascript setlocal formatprg=prettier\ --stdin
 
-
 function! DisableSTL()
   return ""
 endfunction
-au BufEnter NvimTree setlocal statusline=%!DisableSTL()
+
+augroup nvimTree
+  autocmd!
+  autocmd BufEnter NvimTree setlocal statusline=%!DisableSTL()
+  autocmd BufEnter * ++nested if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif
+augroup END
 
 autocmd FileType help wincmd L
+
+augroup filetypedetect
+  au! BufRead,BufNewFile *.csv,*.dat setfiletype csv
+augroup END
 
 augroup filetype_vimwiki
   autocmd!

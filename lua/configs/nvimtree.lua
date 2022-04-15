@@ -43,7 +43,6 @@ nvimtree.setup({
   },
   hijack_netrw = true,
   hijack_cursor = false,
-  auto_close = true,
   update_focused_file = {
     enable = true,
   },

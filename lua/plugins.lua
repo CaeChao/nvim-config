@@ -45,6 +45,7 @@ require("packer").startup({
     use({
       "akinsho/bufferline.nvim",
       event = "VimEnter",
+      tag = "*",
       after = "nvim-web-devicons",
       config = [[require('configs.bufferline')]],
     })
@@ -66,8 +67,8 @@ require("packer").startup({
       config = [[require('configs.others').blankline()]],
     })
 
-    use({ "vim-pandoc/vim-pandoc", ft = { "markdown" } })
-    use({ "vim-pandoc/vim-pandoc-syntax", ft = { "markdown" } })
+    use({ "vim-pandoc/vim-pandoc", ft = { "markdown", "vimwiki" } })
+    use({ "vim-pandoc/vim-pandoc-syntax", ft = { "markdown", "pandoc", "vimwiki"} })
     use({ "elzr/vim-json", ft = { "json" } })
     use({ "chrisbra/csv.vim", ft = { "csv" } })
 
@@ -184,12 +185,7 @@ require("packer").startup({
     end
 
     -- Move & Search & Replace
-    use({
-      "karb94/neoscroll.nvim",
-      config = function()
-        require("neoscroll").setup()
-      end,
-    })
+    use({ "karb94/neoscroll.nvim", config = [[require('configs.neoscroll')]] })
 
     use({ "kevinhwang91/nvim-hlslens", event = "VimEnter" })
 
@@ -204,10 +200,10 @@ require("packer").startup({
 
     -- Note Taking
     use({ "vimwiki/vimwiki", ft = { "vimwiki", "markdown", "pandoc" } })
-    use({ "CaeChao/vim-zettel", after = "vimwiki", ft = { "vimwiki", "markdown", "pandoc" } })
-    use({ "tools-life/taskwiki", after = "vimwiki", ft = { "vimwiki", "markdown", "pandoc" } })
+    use({ "CaeChao/vim-zettel", after = "vimwiki", ft = { "vimwiki", "markdown" } })
+    use({ "tools-life/taskwiki", after = "vimwiki", ft = { "vimwiki", "markdown" } })
+    use({ "blindFS/vim-taskwarrior", ft = { "vimwiki", "markdown" } })
     use({ "powerman/vim-plugin-AnsiEsc" })
-    use({ "blindFS/vim-taskwarrior", after = "vimwiki", ft = { "vimwiki", "markdown", "pandoc" } })
     use({ "mattn/calendar-vim" })
 
     if packer_bootstrap then
