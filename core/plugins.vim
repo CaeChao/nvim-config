@@ -11,13 +11,6 @@ let g:mkdp_open_to_the_world = 1
 let g:mkdp_refresh_slow = 1
 let g:mkdp_filetypes = ['markdown', 'pandoc', 'vimwiki']
 
-"{{ gutentags settings
-let g:gutentags_cache_dir = stdpath('cache') . '/ctags'
-let g:gutentags_add_default_project_roots = 0
-let g:gutentags_generate_on_write = 1
-let g:gutentags_project_root = ['.root', '.svn', '.git', 'package.json']
-"}}
-
 "{{ VimWiki settings
 let g:vimwiki_global_ext = 0
 let g:vimwiki_dir_link = 'index'

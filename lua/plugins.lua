@@ -68,7 +68,7 @@ require("packer").startup({
     })
 
     use({ "vim-pandoc/vim-pandoc", ft = { "markdown", "vimwiki" } })
-    use({ "vim-pandoc/vim-pandoc-syntax", ft = { "markdown", "pandoc", "vimwiki"} })
+    use({ "vim-pandoc/vim-pandoc-syntax", ft = { "markdown", "pandoc", "vimwiki" } })
     use({ "elzr/vim-json", ft = { "json" } })
     use({ "chrisbra/csv.vim", ft = { "csv" } })
 
@@ -123,6 +123,9 @@ require("packer").startup({
 
     -- auto-completion engine
     use({ "hrsh7th/nvim-cmp", after = "lspkind-nvim", config = [[require('configs.cmp')]] })
+    -- auto-completion for cmdline
+   use({"gelguy/wilder.nvim", opt = true, setup = [[vim.cmd('packadd wilder.nvim')]]})
+
 
     -- nvim-cmp completion sources
     use({ "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" })
@@ -178,8 +181,6 @@ require("packer").startup({
 
     -- Tags
     if utils.executable("ctags") then
-      -- Tags manager
-      use({ "ludovicchabant/vim-gutentags", event = "VimEnter" })
       -- show file tags in vim window
       use({ "liuchengxu/vista.vim", cmd = "Vista" })
     end
@@ -189,6 +190,14 @@ require("packer").startup({
 
     use({ "kevinhwang91/nvim-hlslens", event = "VimEnter" })
 
+    -- notification
+    use({
+      "rcarriga/nvim-notify",
+      event = "BufEnter",
+      config = function()
+        vim.defer_fn(function() require('configs.notify') end, 2000)
+      end
+    })
     -- UI
     use({ "sainnhe/gruvbox-material", opt = true })
     use({ "sainnhe/everforest", opt = true })

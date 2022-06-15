@@ -50,3 +50,8 @@ augroup filetype_vimwiki
   autocmd FileType vimwiki imap <silent> [[ [[<esc><Plug>ZettelSearchMap
   autocmd FileType vimwiki nmap T <Plug>ZettelYankNameMap
 augroup END
+
+augroup git_repo_check
+  autocmd!
+  autocmd VimEnter,DirChanged * call utils#Inside_git_repo()
+augroup END

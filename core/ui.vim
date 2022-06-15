@@ -2,7 +2,7 @@ let s:theme_packs = {}
 
 function! s:theme_packs.gruvbox_material() dict abort 
   let g:gruvbox_material_background = 'medium'
-  let g:gruvbox_material_palette = 'mix'
+  let g:gruvbox_material_foreground = 'material'
   let g:gruvbox_material_visual = 'grey background'
   let g:gruvbox_material_cursor = 'green'
   let g:gruvbox_material_sign_column_background = 'none'
