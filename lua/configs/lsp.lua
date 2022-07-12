@@ -36,10 +36,10 @@ local custom_attach = function(client, bufnr)
   buf_set_keymap("n", "gr", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", opts)
   buf_set_keymap("n", "gy", "<cmd>lua require('telescope.builtin').lsp_type_definitions()<CR>", opts)
   buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-  buf_set_keymap("n", "ge", "<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>", opts)
-  buf_set_keymap("n", "[d", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
-  buf_set_keymap("n", "]d", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
-  buf_set_keymap("n", "<space>q", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>", opts)
+  buf_set_keymap("n", "ge", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
+  buf_set_keymap("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<CR>", opts)
+  buf_set_keymap("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<CR>", opts)
+  buf_set_keymap("n", "<space>q", "<cmd>lua vim.diagnostic.set_loclist()<CR>", opts)
   buf_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
 
   vim.o.updatetime = 250
@@ -80,6 +80,7 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown", "plaintext" }
 capabilities.textDocument.completion.completionItem.commitCharactersSupport = true
 capabilities.textDocument.completion.completionItem.tagSupport = { valueSet = { 1 } }
+capabilities.offsetEncoding = { "utf-16" }
 
 lspconfig.tsserver.setup({
   init_options = require("nvim-lsp-ts-utils").init_options,
@@ -121,14 +122,29 @@ require("null-ls").setup({
     }),
     require("null-ls").builtins.formatting.prettier.with({
       prefer_local = "node_modules/.bin",
-      filetypes = { "html", "css", "json", "yaml", "markdown" },
+      filetypes = { "html", "scss", "css", "json", "yaml", "markdown" },
     }),
-    require("null-ls").builtins.code_actions.gitsigns,
+    require("null-ls").builtins.code_actions.gitsigns.with({
+      filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "html", "scss", "css", "json" }
+    }),
     require("null-ls").builtins.formatting.stylua.with({
       extra_args = { "--config-path", vim.fn.expand("~/.config/stylua.toml") },
     }),
-    require("null-ls").builtins.completion.spell,
+    require("null-ls").builtins.completion.luasnip.with({
+      filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "html", "scss", "css", "json" }
+    }),
+    require("null-ls").builtins.completion.spell.with({
+      filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "html", "scss", "css", "json" }
+    }),
   },
+})
+
+lspconfig.cssls.setup({
+  on_attach = custom_attach,
+  flags = {
+    debounce_text_changes = 200,
+  },
+  capabilities = capabilities,
 })
 
 lspconfig.pylsp.setup({
@@ -180,7 +196,7 @@ lspconfig.vimls.setup({
 
 local sumneko_binary_path = vim.fn.exepath("lua-language-server")
 if vim.g.is_mac or vim.g.is_linux and sumneko_binary_path ~= "" then
-  local sumneko_root_path = vim.fn.fnamemodify(sumneko_binary_path, ":h:h:h")
+  local sumneko_root_path = vim.fn.fnamemodify(sumneko_binary_path, ":h:h")
 
   local runtime_path = vim.split(package.path, ";")
   table.insert(runtime_path, "lua/?.lua")

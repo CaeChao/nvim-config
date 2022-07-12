@@ -1,10 +1,5 @@
 lua require('init')
 
-" vinegar
-let g:ranger_replace_netrw = 1
-let g:NERDTreeHijackNetrw = 0
-let g:ranger_map_keys = 0
-
 " Markdown-preview
 let g:mkdp_command_for_global = 1
 let g:mkdp_open_to_the_world = 1

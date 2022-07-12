@@ -164,8 +164,6 @@ require("packer").startup({
     use({ "tpope/vim-sleuth", event = "VimEnter" })
     use({ "tpope/vim-dispatch", opt = true })
     use({ "radenling/vim-dispatch-neovim", opt = true })
-    -- use {'machakann/vim-highlightedyank', event='VimEnter'}
-    use({ "romainl/vim-cool", event = "VimEnter" }) -- Clear highlight search automatically
     use({ "andymass/vim-matchup", opt = true })
     use({ "Pocco81/TrueZen.nvim", config = [[require('configs.others').truezen()]] })
 

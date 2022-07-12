@@ -1,8 +1,3 @@
-" ============================================================================
-" VIM-PLUG PLUGINS {{{
-" ============================================================================
-
-" set runtimepath+=~/.local/share/nvim/site/pack/ultisnips
 let &packpath=&runtimepath
 
 let g:is_linux = (has('unix') && !has('macunix')) ? v:true : v:false

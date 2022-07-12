@@ -18,6 +18,7 @@ require("bufferline").setup({
     show_buffer_close_icons = true,
     always_show_bufferline = true,
     diagnostics = "nvim_lsp", -- 'or nvim_lsp'
+    persist_buffer_sort = true,
     separator_style = "slant",
     offsets = {
       {
@@ -27,6 +28,7 @@ require("bufferline").setup({
         text_align = "center",
       },
     },
+    sort_by = 'insert_after_current',
     custom_filter = function(bufnr)
       -- if the result is false, this buffer will be shown, otherwise, this
       -- buffer will be hidden.
