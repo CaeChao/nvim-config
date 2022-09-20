@@ -74,6 +74,9 @@ require("packer").startup({
 
     use({ "liuchengxu/graphviz.vim", ft = { "gv", "dot" } })
 
+    -- Debugger
+    use({ 'mfussenegger/nvim-dap' })
+
     -- Git Integration
     use({
       "lewis6991/gitsigns.nvim",
@@ -91,6 +94,7 @@ require("packer").startup({
 
     use({
       "nvim-telescope/telescope.nvim",
+      branch = '0.1.x',
       module = "telescope",
       cmd = "Telescope",
       requires = {
@@ -124,7 +128,7 @@ require("packer").startup({
     -- auto-completion engine
     use({ "hrsh7th/nvim-cmp", after = "lspkind-nvim", config = [[require('configs.cmp')]] })
     -- auto-completion for cmdline
-   use({"gelguy/wilder.nvim", opt = true, setup = [[vim.cmd('packadd wilder.nvim')]]})
+    use({ "gelguy/wilder.nvim", opt = true, setup = [[vim.cmd('packadd wilder.nvim')]] })
 
 
     -- nvim-cmp completion sources
@@ -165,7 +169,7 @@ require("packer").startup({
     use({ "tpope/vim-dispatch", opt = true })
     use({ "radenling/vim-dispatch-neovim", opt = true })
     use({ "andymass/vim-matchup", opt = true })
-    use({ "Pocco81/TrueZen.nvim", config = [[require('configs.others').truezen()]] })
+    use({ "Pocco81/true-zen.nvim", config = [[require('configs.others').truezen()]] })
 
     -- Markdown utils
 
@@ -208,7 +212,7 @@ require("packer").startup({
     -- Note Taking
     use({ "vimwiki/vimwiki", ft = { "vimwiki", "markdown", "pandoc" } })
     use({ "CaeChao/vim-zettel", after = "vimwiki", ft = { "vimwiki", "markdown" } })
-    use({ "tools-life/taskwiki", after = "vimwiki", ft = { "vimwiki", "markdown" } })
+    use({ "tools-life/taskwiki", after = "vimwiki", ft = { "vimwiki", "markdown", "pandoc" } })
     use({ "blindFS/vim-taskwarrior", ft = { "vimwiki", "markdown" } })
     use({ "powerman/vim-plugin-AnsiEsc" })
     use({ "mattn/calendar-vim" })

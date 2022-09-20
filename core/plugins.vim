@@ -14,6 +14,7 @@ let g:vimwiki_create_link = 0
 let g:vimwiki_valid_html_tags = 'b,i,s,u,sub,sup,kbd,br,hr, pre, script'
 let g:vimwiki_list = [{
                       \ 'path': '~/Documents/vimwiki',
+                      \ 'diary_rel_path': '/',
                       \ 'path_html': '~/Documents/vimwiki/wiki_html',
                       \ 'template_path': '~/Documents/vimwiki/templates',
                       \ 'template_default': 'def_template',

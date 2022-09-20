@@ -39,4 +39,4 @@ if has('termguicolors')
   set termguicolors
 endif
 set nofoldenable                        " Folding
-
+let g:highlightedyank_highlight_duration = 1000

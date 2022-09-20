@@ -9,7 +9,7 @@ telescope.setup({
       i = {
         ["<C-j>"] = actions.move_selection_next,
         ["<C-k>"] = actions.move_selection_previous,
-        ["<c-t>"] = trouble.open_with_trouble,
+        ["<C-t>"] = trouble.open_with_trouble,
         ["<Down>"] = require("telescope.actions").cycle_history_next,
         ["<Up>"] = require("telescope.actions").cycle_history_prev,
       },
