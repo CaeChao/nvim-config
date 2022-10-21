@@ -190,7 +190,12 @@ require("packer").startup({
     -- Move & Search & Replace
     use({ "karb94/neoscroll.nvim", config = [[require('configs.neoscroll')]] })
 
-    use({ "kevinhwang91/nvim-hlslens", event = "VimEnter" })
+    use({
+      "kevinhwang91/nvim-hlslens", 
+      event = "VimEnter",
+      keys = { { "n", "*" }, { "n", "#" }, { "n", "n" }, { "n", "N" } },
+      config = [[require('configs.hlslens')]]
+    })
 
     -- notification
     use({

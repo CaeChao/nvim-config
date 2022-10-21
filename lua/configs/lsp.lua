@@ -48,15 +48,12 @@ local custom_attach = function(client, bufnr)
   ]])
 
   -- Set some key bindings conditional on server capabilities
-  if client.resolved_capabilities.document_formatting then
-    buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-  end
-  if client.resolved_capabilities.document_range_formatting then
-    buf_set_keymap("x", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR><ESC>", opts)
+  if client.server_capabilities.documentFormattingProvider then
+    buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", opts)
   end
 
   -- The blow command will highlight the current variable and its usages in the buffer.
-  if client.resolved_capabilities.document_highlight then
+  if client.server_capabilities.documentHighlightProvider then
     vim.cmd([[
       hi link LspReferenceRead Visual
       hi link LspReferenceText Visual
@@ -75,9 +72,7 @@ local custom_attach = function(client, bufnr)
   end
 end
 
-local capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown", "plaintext" }
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
 capabilities.textDocument.completion.completionItem.commitCharactersSupport = true
 capabilities.textDocument.completion.completionItem.tagSupport = { valueSet = { 1 } }
 capabilities.offsetEncoding = { "utf-16" }
@@ -85,8 +80,8 @@ capabilities.offsetEncoding = { "utf-16" }
 lspconfig.tsserver.setup({
   init_options = require("nvim-lsp-ts-utils").init_options,
   on_attach = function(client, bufnr)
-    client.resolved_capabilities.document_formatting = false
-    client.resolved_capabilities.document_range_formatting = false
+    client.server_capabilities.documentFormattingProvider = false
+    client.server_capabilities.document_range_formatting = false
     local ts_utils = require("nvim-lsp-ts-utils")
     ts_utils.setup({
       eslint_bin = "eslint_d",
