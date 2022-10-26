@@ -74,9 +74,6 @@ require("packer").startup({
 
     use({ "liuchengxu/graphviz.vim", ft = { "gv", "dot" } })
 
-    -- Debugger
-    use({ 'mfussenegger/nvim-dap' })
-
     -- Git Integration
     use({
       "lewis6991/gitsigns.nvim",
@@ -156,7 +153,18 @@ require("packer").startup({
     use("jose-elias-alvarez/null-ls.nvim")
     use("jose-elias-alvarez/nvim-lsp-ts-utils")
 
-    --
+
+    -- Debugger
+    use({ 'mfussenegger/nvim-dap', config = [[require('configs.dap')]] })
+    use({ 
+      'Weissle/persistent-breakpoints.nvim', 
+      require('persistent-breakpoints').setup{ 
+        load_breakpoints_event = { "BufReadPost" } 
+      } 
+    }) 
+    use({ 'ofirgall/goto-breakpoints.nvim' }) 
+    use({ "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"}, config = require("dapui").setup() })
+
     -- Edit
     use({ "windwp/nvim-autopairs", after = "nvim-cmp", config = [[require('configs.others').autopairs()]] })
     use({ "tpope/vim-unimpaired", event = "VimEnter" })

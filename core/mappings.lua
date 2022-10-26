@@ -71,8 +71,15 @@ keymap.set("n", "<leader>ms", "<Plug>MarkdownPreviewStop", { noremap = true })
 
 
 -- VimWiki
-keymap.set("n", "<leader>gl", "<cmd>ZettelGenerateLinks")
-keymap.set("n", "<leader>twr", "<cmd>TaskWikiBufferLoad<CR>")
+keymap.set("n", "<leader>gl", "<cmd>ZettelGenerateLinks<cr>")
+keymap.set("n", "<leader>twr", "<cmd>TaskWikiBufferLoad<cr>")
 keymap.set("n", "<leader>x", "<Plug>VimwikiToggleListItem", { noremap = true })
 keymap.set("n", "<leader>c", "<cmd>Calendar<CR>")
 vim.g.taskwiki_maplocalleader="'tw"
+
+-- Debugger
+keymap.set("n", "bp", "<cmd>lua require('persistent-breakpoints.api').toggle_breakpoint()<cr>", { noremap = true, silent = true })
+keymap.set("n", "cb", "<cmd>lua require('persistent-breakpoints.api').clear_all_breakpoints()<cr>", { noremap = true, silent = true })
+keymap.set("n", "]d", require('goto-breakpoints').next, {})
+keymap.set("n", "[d", require('goto-breakpoints').prev, {})
+keymap.set("n", "<leader>db", "<cmd>lua require('dapui').toggle()<cr>", { noremap = true, silent = true })
