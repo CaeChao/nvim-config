@@ -2,8 +2,8 @@ local config_file_list = {
   "settings.vim",
   "plugins.vim",
   "autocmds.vim",
-  "ui.vim",
-  "mappings.lua"
+  "mappings.lua",
+  "ui.lua"
 }
 
 for _, name in ipairs(config_file_list) do

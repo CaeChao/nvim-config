@@ -22,4 +22,11 @@ M.executable = function(name)
   return false
 end
 
+
+M.add_pack = function(name)
+  local status, error = pcall(vim.cmd, "packadd " .. name)
+
+  return status
+end
+
 return M

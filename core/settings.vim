@@ -9,6 +9,7 @@ set encoding=utf-8
 set spelllang=en_us,cjk
 
 " Buffer settings
+set sessionoptions+=globals
 set expandtab
 set shiftwidth=2
 set tabstop=2

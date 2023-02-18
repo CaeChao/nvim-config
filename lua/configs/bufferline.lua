@@ -17,7 +17,7 @@ require("bufferline").setup({
     view = "multiwindow",
     show_buffer_close_icons = true,
     always_show_bufferline = true,
-    diagnostics = "nvim_lsp", -- 'or nvim_lsp'
+    diagnostics = "nvim_lsp",
     persist_buffer_sort = true,
     separator_style = "slant",
     offsets = {
