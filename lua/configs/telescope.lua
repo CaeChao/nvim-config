@@ -37,8 +37,8 @@ telescope.setup({
     layout_config = {
       horizontal = {
         prompt_position = "top",
-        preview_width = 0.55,
-        results_width = 0.8,
+        preview_width = 0.5,
+        results_width = 0.6,
       },
       vertical = {
         mirror = false,
@@ -55,25 +55,17 @@ telescope.setup({
   },
   pickers = {
     lsp_definitions = {
-      theme = "dropdown",
-      layout_config = {
-        width = 0.6,
-        height = 0.5,
-      },
+      show_line = false
     },
     lsp_references = {
-      theme = "dropdown",
-      layout_config = {
-        width = 0.6,
-        height = 0.5,
-      },
+      show_line = false
     },
     find_files = {
       theme = "dropdown",
       previewer = false,
       layout_config = {
         width = 0.6,
-        height = 0.80,
+        height = 0.8,
       },
       file_ignore_patterns = { "node_modules" },
       path_display = { "truncate" },
