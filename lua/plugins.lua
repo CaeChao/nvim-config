@@ -173,6 +173,7 @@ require("packer").startup({
     use({ "tpope/vim-surround", event = "VimEnter" })
     use({ "tpope/vim-abolish", event = "VimEnter" })
     use({ "tpope/vim-commentary", event = "VimEnter" })
+    use({'JoosepAlviste/nvim-ts-context-commentstring', event = "VimEnter", config =[[require('configs.contextComment')]]})
     use({ "tpope/vim-sleuth", event = "VimEnter" })
     use({ "tpope/vim-dispatch", opt = true })
     use({ "radenling/vim-dispatch-neovim", opt = true })
