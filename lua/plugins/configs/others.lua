@@ -90,4 +90,28 @@ M.todo = function()
   require("todo-comments").setup({})
 end
 
+M.md_preview = function()
+  vim.g.mkdp_command_for_global = 1
+  vim.g.mkdp_open_to_the_world = 1
+  vim.g.mkdp_refresh_slow = 1
+  vim.g.mkdp_filetypes = { "markdown", "pandoc", "vimwiki" }
+end
+
+M.vista = function()
+  vim.g.vista_default_executive = "ctags"
+  vim.g.vista_executive_for = {
+    javascript = "nvim_lsp",
+    typescript = "nvim_lsp",
+    javascriptreact = "nvim_lsp",
+    typescriptreact = "nvim_lsp",
+    tsx = "nvim_lsp",
+    vimwiki = "markdown",
+    pandoc = "markdown",
+    markdown = "toc",
+  }
+  vim.g.vista_ctags_cmd = {
+    vimwiki = "~/.local/share/nvim/site/pack/packer/opt/taskwiki/extra/vwtags.py",
+  }
+end
+
 return M

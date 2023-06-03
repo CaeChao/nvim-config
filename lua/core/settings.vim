@@ -1,5 +1,5 @@
 " Basic settings
-syntax on
+" syntax on
 set wrapmargin=8
 set number                              " Line numbers
 set shell=/bin/zsh
@@ -15,18 +15,18 @@ set shiftwidth=2
 set tabstop=2
 set softtabstop=2
 set formatoptions=qrn1
-set autoindent                          " Good auto indent
-set smarttab
+" set autoindent                          " Good auto indent
+" set smarttab
 
 set scrolloff=3
 set noshowmode
-set showcmd
+" set showcmd
 set showmatch
-set incsearch
-set hlsearch
+" set incsearch
+" set hlsearch
 set autochdir
 set undofile          
-set wildmenu
+" set wildmenu
 set laststatus=2
 set hidden
 set wrap

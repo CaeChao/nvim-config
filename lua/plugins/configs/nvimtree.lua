@@ -4,8 +4,6 @@ if not present then
   return
 end
 
-local g = vim.g
-
 nvimtree.setup({
   diagnostics = {
     enable = false,
