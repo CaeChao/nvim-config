@@ -1,4 +1,4 @@
-require("bufferline").setup({
+local options = {
   options = {
     close_command = "bdelete! %d",
     right_mouse_command = nil,
@@ -28,7 +28,7 @@ require("bufferline").setup({
         text_align = "center",
       },
     },
-    sort_by = 'insert_after_current',
+    sort_by = "insert_after_current",
     custom_filter = function(bufnr)
       -- if the result is false, this buffer will be shown, otherwise, this
       -- buffer will be hidden.
@@ -45,4 +45,5 @@ require("bufferline").setup({
       return true
     end,
   },
-})
+}
+return options

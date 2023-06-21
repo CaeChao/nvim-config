@@ -44,7 +44,7 @@ local function diff_source()
   end
 end
 
-require("lualine").setup({
+local options = {
   options = {
     -- theme = 'gruvbox-material',
     component_separators = { left = "|", right = "|" },
@@ -55,7 +55,7 @@ require("lualine").setup({
       { "mode", left_padding = 0, right_padding = 1 },
     },
     lualine_b = {
-      { "filetype", icon_only = true, separator = "" },
+      { "filetype", icon_only = true,  separator = "" },
       { "filename", file_status = true },
     },
     lualine_c = {
@@ -91,4 +91,5 @@ require("lualine").setup({
       { "location", separator = { right = "" }, left_padding = 2 },
     },
   },
-})
+}
+return options

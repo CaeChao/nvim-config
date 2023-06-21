@@ -3,7 +3,7 @@ local present, telescope = pcall(require, "telescope")
 local actions = require("telescope.actions")
 local trouble = require("trouble.providers.telescope")
 
-telescope.setup({
+local options = {
   defaults = {
     mappings = {
       i = {
@@ -94,8 +94,5 @@ telescope.setup({
       find_cmd = "rg",
     },
   },
-})
-
-pcall(function()
-  telescope.load_extension({ "fzf", "media_files" })
-end)
+}
+return options

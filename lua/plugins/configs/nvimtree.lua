@@ -1,10 +1,4 @@
-local present, nvimtree = pcall(require, "nvim-tree")
-
-if not present then
-  return
-end
-
-nvimtree.setup({
+local options = {
   diagnostics = {
     enable = false,
     icons = {
@@ -47,4 +41,5 @@ nvimtree.setup({
   update_focused_file = {
     enable = true,
   },
-})
+}
+return options

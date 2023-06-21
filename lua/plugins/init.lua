@@ -1,271 +1,405 @@
-local fn = vim.fn
-local api = vim.api
-local cmd = vim.cmd
-local utils = require("core.utils")
+local M = {}
+local plugins_list = {
 
-local packer_dir = fn.stdpath("data") .. "/site/pack/packer/opt/packer.nvim"
-local packer_repo = "https://github.com/wbthomason/packer.nvim"
--- local install_cmd = string.format('10split |term git clone --depth=1 %s %s', packer_repo, packer_dir)
+  -- Icon
+  {
+    "nvim-tree/nvim-web-devicons",
+    opts = function()
+      return require("plugins.configs.icons")
+    end,
+    config = function(_, opts)
+      require("nvim-web-devicons").setup(opts)
+    end,
+  },
 
-cmd("packadd packer.nvim")
+  -- StatusLine & Bufferline
+  {
+    "nvim-lualine/lualine.nvim",
+    event = "VimEnter",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = function()
+      return require("plugins.configs.lualine")
+    end,
+    config = function(_, opts)
+      require("lualine").setup(opts)
+    end,
+  },
 
-if fn.empty(fn.glob(packer_dir)) > 0 then
-  api.nvim_echo({ { "Installing packer.nvim", "Type" } }, true, {})
-  -- remove the dir before cloning from github
-  fn.delete(packer_dir, "rf")
-  packer_bootstrap = fn.system({ "git", "clone", packer_repo, "--depth", "1", packer_dir })
-  -- cmd(install_cmd)
+  {
+    "akinsho/bufferline.nvim",
+    event = "VimEnter",
+    version = "*",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = function()
+      return require("plugins.configs.bufferline")
+    end,
+    config = function(_, opts)
+      require("bufferline").setup(opts)
+    end,
+  },
 
-  cmd("packadd packer.nvim")
-  present, packer = pcall(require, "packer")
+  -- Syntax
+  {
+    "nvim-treesitter/nvim-treesitter",
+    event = { "BufReadPost", "BufNewFile" },
+    cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
+    build = ":TSUpdate",
+    opts = function()
+      return require("plugins.configs.treesitter")
+    end,
+    config = function(_, opts)
+      require("nvim-treesitter.configs").setup(opts)
+    end,
+  },
 
-  if present then
-    print("Packer Installed successfully")
-  else
-    error("Couldn't clone packer !\nPacker path: " .. packer_dir .. "\n" .. packer)
-  end
-end
+  "MaxMEllon/vim-jsx-pretty",
 
-require("packer").startup({
-  function()
-    --  Plugins Manager
-    use({ "wbthomason/packer.nvim", event = "VimEnter" })
+  {
+    "norcalli/nvim-colorizer.lua",
+    opts = function()
+      return require("plugins.configs.others").colorizer
+    end,
+    config = function(_, opts)
+      require("colorizer").setup(opts)
+    end,
+  },
 
-    -- Icons
-    use({ "nvim-tree/nvim-web-devicons", config = [[require('plugins.configs.icons')]] })
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    opts = function()
+      return require("plugins.configs.others").blankline
+    end,
+    config = function(_, opts)
+      require("indent_blankline").setup(opts)
+    end,
+  },
 
-    -- StatusLine & Bufferline
-    use({
-      "nvim-lualine/lualine.nvim",
-      requires = { "nvim-tree/nvim-web-devicons", opt = true },
-      config = function()
-        require("plugins.configs.lualine")
-      end,
-    })
+  { "vim-pandoc/vim-pandoc", ft = { "markdown", "vimwiki", "pandoc" } },
+  { "vim-pandoc/vim-pandoc-syntax", ft = { "markdown", "pandoc", "vimwiki" } },
+  { "elzr/vim-json", ft = { "json" } },
+  { "chrisbra/csv.vim", ft = { "csv" } },
 
-    use({
-      "akinsho/bufferline.nvim",
-      event = "VimEnter",
-      tag = "*",
-      after = "nvim-web-devicons",
-      config = [[require('plugins.configs.bufferline')]],
-    })
+  { "liuchengxu/graphviz.vim", ft = { "gv", "dot" } },
 
-    -- Syntax
-    use({
-      "nvim-treesitter/nvim-treesitter",
-      event = "BufRead",
-      run = ":TSUpdate",
-      config = [[require('plugins.configs.treesitter')]],
-    })
-    use("MaxMEllon/vim-jsx-pretty")
+  -- Git Integration
+  {
+    "lewis6991/gitsigns.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = function()
+      return require("plugins.configs.others").gitsigns
+    end,
+    config = function(_, opts)
+      require("gitsigns").setup(opts)
+    end,
+  },
 
-    use({ "norcalli/nvim-colorizer.lua", config = [[require('plugins.configs.others').colorizer()]] })
+  { "tpope/vim-fugitive", lazy = true, cmd = { "G", "Git" } },
 
-    use({
-      "lukas-reineke/indent-blankline.nvim",
-      event = "VimEnter",
-      config = [[require('plugins.configs.others').blankline()]],
-    })
+  -- File explorer, picker etc
+  {
+    "nvim-tree/nvim-tree.lua",
+    cmd = { "NvimTreeToggle", "NvimTreeFocus" },
+    opts = function()
+      return require("plugins.configs.nvimtree")
+    end,
+    config = function(_, opts)
+      require("nvim-tree").setup(opts)
+    end,
+  },
 
-    use({ "vim-pandoc/vim-pandoc", ft = { "markdown", "vimwiki" } })
-    use({ "vim-pandoc/vim-pandoc-syntax", ft = { "markdown", "pandoc", "vimwiki" } })
-    use({ "elzr/vim-json", ft = { "json" } })
-    use({ "chrisbra/csv.vim", ft = { "csv" } })
-
-    use({ "liuchengxu/graphviz.vim", ft = { "gv", "dot" } })
-
-    -- Git Integration
-    use({
-      "lewis6991/gitsigns.nvim",
-      requires = { "nvim-lua/plenary.nvim" },
-      config = [[require('plugins.configs.others').gitsigns()]],
-    })
-    use({ "tpope/vim-fugitive", event = "User InGitRepo" })
-
-    -- File explorer, picker etc
-    use({
-      "nvim-tree/nvim-tree.lua",
-      cmd = { "NvimTreeToggle", "NvimTreeFocus" },
-      config = [[require('plugins.configs.nvimtree')]],
-    })
-
-    use({
-      "nvim-telescope/telescope.nvim",
-      branch = "0.1.x",
-      module = "telescope",
-      cmd = "Telescope",
-      requires = {
-        {
-          "nvim-lua/plenary.nvim",
-        },
-        {
-          "nvim-telescope/telescope-fzf-native.nvim",
-          run = "make",
-        },
-        {
-          "nvim-telescope/telescope-media-files.nvim",
-        },
+  {
+    "nvim-telescope/telescope.nvim",
+    cmd = "Telescope",
+    dependencies = {
+      {
+        "nvim-lua/plenary.nvim",
       },
-      config = [[require('plugins.configs.telescope')]],
-    })
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "make",
+      },
+      {
+        "nvim-telescope/telescope-media-files.nvim",
+      },
+    },
+    opts = function()
+      return require("plugins.configs.telescope")
+    end,
+    config = function(_, opts)
+      local telescope = require("telescope")
+      telescope.setup(opts)
 
-    use({ "junegunn/fzf" })
-    use({ "junegunn/fzf.vim" })
+      -- load extensions
 
-    -- snippet engine and snippet template
-    use({
-      "L3MON4D3/LuaSnip",
-      event = "InsertEnter",
-      wants = "friendly-snippets",
-      config = [[require('plugins.configs.others').luasnip()]],
-    })
+      pcall(function()
+        telescope.load_extension({ "fzf", "media_files" })
+      end)
+    end,
+  },
 
-    use({ "onsails/lspkind-nvim", event = "BufEnter" }) -- vscode style snippet icons
+  -- auto-completion engine
+  {
+    "hrsh7th/nvim-cmp",
+    init = function()
+      vim.cmd("hi link CmpItemMenu Comment")
+    end,
+    event = "InsertEnter",
+    dependencies = {
+      "onsails/lspkind-nvim",
 
-    -- auto-completion engine
-    use({ "hrsh7th/nvim-cmp", after = "lspkind-nvim", config = [[require('plugins.configs.cmp')]] })
-    -- auto-completion for cmdline
-    use({ "gelguy/wilder.nvim", opt = true, setup = [[vim.cmd('packadd wilder.nvim')]] })
+      -- snippet engine and snippet template
+      {
+        "L3MON4D3/LuaSnip",
+        dependencies = "rafamadriz/friendly-snippets",
+        opts = { history = true, updateevents = "TextChanged,TextChangedI" },
+        config = function(_, opts)
+          require("plugins.configs.others").luasnip(opts)
+        end,
+      },
 
-    -- nvim-cmp completion sources
-    use({ "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" })
-    use({ "hrsh7th/cmp-nvim-lua", after = "cmp_luasnip" })
-    use({ "hrsh7th/cmp-nvim-lsp", after = "nvim-cmp" })
-    use({ "hrsh7th/cmp-buffer", after = "nvim-cmp" })
-    use({ "hrsh7th/cmp-path", after = "nvim-cmp" })
-    use({ "f3fora/cmp-spell", after = "nvim-cmp" })
+      -- autopairing of (){}[] etc
+      {
+        "windwp/nvim-autopairs",
+        opts = {
+          disable_filetype = { "TelescopePrompt", "vim" },
+          map_cr = false,
+          history = true,
+          updateevents = "TextChanged,TextChangedI",
+        },
+        config = function(_, opts)
+          require("nvim-autopairs").setup(opts)
 
-    use({ "rafamadriz/friendly-snippets", event = "InsertEnter" })
-    -- use { 'honza/vim-snippets', event = 'InsertEnter' }
+          -- setup cmp for autopairs
+          local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+          require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
+        end,
+      },
+      -- nvim-cmp completion sources
+      {
+        "saadparwaiz1/cmp_luasnip",
+        "hrsh7th/cmp-nvim-lua",
+        "hrsh7th/cmp-nvim-lsp",
+        "hrsh7th/cmp-buffer",
+        "hrsh7th/cmp-path",
+        "f3fora/cmp-spell",
+      },
+      --  { 'honza/vim-snippets', event = 'InsertEnter' }
+    },
+    opts = function()
+      return require("plugins.configs.cmp")
+    end,
+    config = function(_, opts)
+      require("cmp").setup(opts)
+    end,
+  },
 
-    use({
-      "williamboman/mason.nvim",
-      run = ":MasonUpdate", -- :MasonUpdate updates registry contents
-    })
-    -- LSP
-    use({ "neovim/nvim-lspconfig", after = "cmp-nvim-lsp", config = [[require('plugins.configs.lsp')]] })
+  -- auto-completion for cmdline
+  {
+    "gelguy/wilder.nvim",
+    lazy = true,
+  },
 
-    use({ "folke/trouble.nvim", config = require("trouble").setup({}) })
+  --   {
+  --     "williamboman/mason.nvim",
+  --     build = ":MasonUpdate", -- :MasonUpdate updates registry contents
+  --   },
 
-    use({
-      "folke/todo-comments.nvim",
-      requires = "nvim-lua/plenary.nvim",
-      config = [[require('plugins.configs.others').todo()]],
-    })
+  -- LSP
+  {
+    "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      require("plugins.configs.lsp")
+    end,
+  },
 
-    use("jose-elias-alvarez/null-ls.nvim")
-    use("jose-elias-alvarez/nvim-lsp-ts-utils")
+  {
+    "folke/trouble.nvim",
+    config = function()
+      require("trouble").setup({})
+    end,
+  },
 
-    -- Debugger
-    use({ "mfussenegger/nvim-dap", config = [[require('plugins.configs.dap')]] })
-    use({
-      "Weissle/persistent-breakpoints.nvim",
+  {
+    "folke/todo-comments.nvim",
+    dependencies = "nvim-lua/plenary.nvim",
+    config = function()
+      require("todo-comments").setup({})
+    end,
+  },
+
+  "jose-elias-alvarez/null-ls.nvim",
+  "jose-elias-alvarez/nvim-lsp-ts-utils",
+
+  -- Debugger
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      -- fancy UI for the debugger
+      "rcarriga/nvim-dap-ui",
+      -- stylua: ignore
+      opts = {},
+      config = function(_, opts)
+        require("plugins.configs.dap").setup_ui(opts)
+      end,
+    },
+  },
+  {
+    "Weissle/persistent-breakpoints.nvim",
+    config = function()
       require("persistent-breakpoints").setup({
         load_breakpoints_event = { "BufReadPost" },
-      }),
-    })
-    use({ "ofirgall/goto-breakpoints.nvim" })
-    use({ "rcarriga/nvim-dap-ui", requires = { "mfussenegger/nvim-dap" }, config = require("dapui").setup() })
-
-    -- Edit
-    use({ "windwp/nvim-autopairs", after = "nvim-cmp", config = [[require('plugins.configs.others').autopairs()]] })
-    use({ "tpope/vim-unimpaired", event = "VimEnter" })
-    use({ "tpope/vim-repeat", event = "VimEnter" })
-    use({ "tpope/vim-endwise", event = "VimEnter" })
-    use({ "tpope/vim-surround", event = "VimEnter" })
-    use({ "tpope/vim-abolish", event = "VimEnter" })
-    use({ "tpope/vim-commentary", event = "VimEnter" })
-    use({ "tpope/vim-sleuth", event = "VimEnter" })
-    use({ "tpope/vim-dispatch", opt = true })
-    use({ "radenling/vim-dispatch-neovim", opt = true })
-    use({ "andymass/vim-matchup", opt = true })
-    use({ "Pocco81/true-zen.nvim", config = [[require('plugins.configs.others').truezen()]] })
-
-    -- Markdown utils
-
-    use({
-      "iamcco/markdown-preview.nvim",
-      setup = function()
-        require("plugins.configs.others").md_preview()
-      end,
-      run = function()
-        fn["mkdp#util#install"]()
-      end,
-      ft = { "markdown", "pandoc", "vimwiki" },
-    })
-
-    -- Tags
-    if utils.executable("ctags") then
-      -- show file tags in vim window
-      use({
-        "liuchengxu/vista.vim",
-        setup = function()
-          require("plugins.configs.others").vista()
-        end,
-        cmd = "Vista",
       })
-    end
+    end,
+  },
+  { "ofirgall/goto-breakpoints.nvim" },
+  -- Edit
 
-    -- Move & Search & Replace
-    use({ "karb94/neoscroll.nvim", config = [[require('plugins.configs.neoscroll')]] })
+  { "tpope/vim-unimpaired", event = "VimEnter" },
+  { "tpope/vim-repeat", event = "VimEnter" },
+  { "tpope/vim-endwise", event = "VimEnter" },
+  { "tpope/vim-surround", event = "VimEnter" },
+  { "tpope/vim-abolish", event = "VimEnter" },
+  { "tpope/vim-commentary", event = "VimEnter" },
+  { "tpope/vim-sleuth", event = "VimEnter" },
+  { "tpope/vim-dispatch", lazy = true },
+  { "radenling/vim-dispatch-neovim", lazy = true },
+  { "andymass/vim-matchup", lazy = true },
+  {
+    "Pocco81/true-zen.nvim",
+    opts = function()
+      require("plugins.configs.others").truezen()
+    end,
+    config = function(_, opts)
+      require("true-zen").setup(opts)
+    end,
+  },
 
-    use({
-      "kevinhwang91/nvim-hlslens",
-      event = "VimEnter",
-      keys = { { "n", "*" }, { "n", "#" }, { "n", "n" }, { "n", "N" } },
-      config = [[require('plugins.configs.hlslens')]],
-    })
+  -- Markdown utils
 
-    -- notification
-    use({
-      "rcarriga/nvim-notify",
-      event = "BufEnter",
-      config = function()
-        vim.defer_fn(function()
-          require("plugins.configs.notify")
-        end, 2000)
-      end,
-    })
-    -- UI
-    use({ "sainnhe/gruvbox-material", opt = true })
-    use({ "sainnhe/everforest", opt = true })
-    -- use ({'eddyekofo94/gruvbox-flat.nvim', opt = true})
-    use({ "EdenEast/nightfox.nvim", opt = true })
-    use({ "christianchiarulli/nvcode-color-schemes.vim", opt = true })
+  {
+    "iamcco/markdown-preview.nvim",
+    init = function()
+      require("plugins.configs.others").md_preview()
+    end,
+    build = function()
+      vim.fn["mkdp#util#install"]()
+    end,
+    ft = { "markdown", "pandoc", "vimwiki" },
+  },
 
-    -- use {'vim-ctrlspace/vim-ctrlspace'}
+  -- Tags
+  -- if utils.executable("ctags") then
+  -- show file tags in vim window
+  {
+    "liuchengxu/vista.vim",
+    init = function()
+      require("plugins.configs.others").vista()
+    end,
+    cmd = "Vista",
+  },
+  -- end
 
-    -- Note Taking
-    use({
-      "vimwiki/vimwiki",
-      setup = function()
-        require("plugins.configs.vimwiki").vimwiki()
-      end,
-      ft = { "vimwiki", "markdown", "pandoc" },
-    })
-    use({
-      "CaeChao/vim-zettel",
-      after = "vimwiki",
-      setup = function()
-        require("plugins.configs.vimwiki").zettel()
-      end,
-      ft = { "vimwiki", "markdown", "pandoc" },
-    })
-    use({
-      "tools-life/taskwiki",
-      after = "vimwiki",
-      setup = function()
-        require("plugins.configs.vimwiki").taskwiki()
-      end,
-      ft = { "vimwiki", "markdown", "pandoc" },
-    })
-    use({ "blindFS/vim-taskwarrior", ft = { "vimwiki", "markdown" } })
-    use({ "powerman/vim-plugin-AnsiEsc" })
-    use({ "mattn/calendar-vim" })
+  -- Move & Search & Replace
+  {
+    "karb94/neoscroll.nvim",
+    opts = {
+      easing_function = "quadratic",
+    },
+    config = function(_, opts)
+      require("neoscroll").setup(opts)
+      local t = require("plugins.configs.neoscroll")
+      require("neoscroll.config").set_mappings(t)
+    end,
+  },
 
-    if packer_bootstrap then
-      require("packer").sync()
-    end
-  end,
-})
+  {
+    "kevinhwang91/nvim-hlslens",
+    event = "VimEnter",
+    keys = { { "n", "*" }, { "n", "#" }, { "n", "n" }, { "n", "N" } },
+    opts = {
+      calm_down = true,
+      nearest_only = true,
+    },
+    config = function(_, opts)
+      require("hlslens").setup(opts)
+      require("plugins.configs.hlslens").load_mappings()
+    end,
+  },
+
+  -- notification
+  {
+    "rcarriga/nvim-notify",
+    event = "BufEnter",
+    config = function()
+      vim.defer_fn(function()
+        require("plugins.configs.notify")
+      end, 2000)
+    end,
+  },
+
+  -- UI
+  {
+    "sainnhe/gruvbox-material",
+    lazy = false,
+    init = function()
+      require("plugins.configs.colorscheme").gruvbox()
+    end,
+    priority = 1000,
+    config = function()
+      vim.cmd([[colorscheme gruvbox-material]])
+    end,
+  },
+
+  -- { "sainnhe/everforest",                          lazy = true },
+  -- { "EdenEast/nightfox.nvim",                      lazy = true },
+  -- { "christianchiarulli/nvcode-color-schemes.vim", lazy = true },
+
+  --  {'vim-ctrlspace/vim-ctrlspace'}
+
+  -- Note Taking
+  {
+    "vimwiki/vimwiki",
+    init = function()
+      require("plugins.configs.vimwiki").vimwiki()
+    end,
+    ft = { "vimwiki", "markdown", "pandoc" },
+    config = function()
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "vimwiki",
+        command = "set syntax=pandoc",
+      })
+    end,
+  },
+  {
+    "CaeChao/vim-zettel",
+    init = function()
+      require("plugins.configs.vimwiki").zettel()
+    end,
+    ft = { "vimwiki" },
+  },
+  {
+    "tools-life/taskwiki",
+    init = function()
+      require("plugins.configs.vimwiki").taskwiki()
+    end,
+    ft = { "vimwiki" },
+  },
+  { "blindFS/vim-taskwarrior", ft = { "vimwiki" } },
+  { "powerman/vim-plugin-AnsiEsc", ft = { "vimwiki" } },
+  { "mattn/calendar-vim", ft = { "vimwiki" } },
+}
+
+function M.load()
+  local lazy_available, lazy = pcall(require, "lazy")
+  local lazy_nvim = require("plugins.configs.lazy_nvim")
+  if not lazy_available then
+    vim.notify("skipping loading plugins until lazy.nvim is installed", vim.log.levels.ERROR, { title = "lazy.nvim" })
+    return
+  end
+
+  lazy.setup(plugins_list, lazy_nvim)
+end
+
+return M

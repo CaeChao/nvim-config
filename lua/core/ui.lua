@@ -48,10 +48,10 @@ if not vim.tbl_contains(vim.tbl_keys(M), colorscheme) then
 end
 
 -- Load the colorscheme
-local status = utils.add_pack(M.theme2dir[colorscheme])
+local error = utils.add_pack(M.theme2dir[colorscheme])
 
-if not status then
-  local msg = string.format("Theme %s is not installed. Run PackerSync to install.", colorscheme)
+if error then
+  local msg = string.format("Theme %s is not installed. Run LazySync to install.", colorscheme)
   vim.notify(msg, vim.log.levels.ERROR, { title = "nvim-config" })
 
   return

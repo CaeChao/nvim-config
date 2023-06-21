@@ -1,7 +1,3 @@
-require("neoscroll").setup({
-  easing_function = "quadratic",
-})
-
 local t = {}
 -- Syntax: t[keys] = {function, {function arguments}}
 -- Use the "sine" easing function
@@ -18,4 +14,4 @@ t["zt"] = { "zt", { "10" } }
 t["zz"] = { "zz", { "10" } }
 t["zb"] = { "zb", { "10" } }
 
-require("neoscroll.config").set_mappings(t)
+return t

@@ -120,16 +120,46 @@ require("null-ls").setup({
       filetypes = { "html", "scss", "css", "json", "yaml", "markdown" },
     }),
     require("null-ls").builtins.code_actions.gitsigns.with({
-      filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "html", "scss", "css", "json" }
+      filetypes = {
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "vue",
+        "html",
+        "scss",
+        "css",
+        "json",
+      },
     }),
     require("null-ls").builtins.formatting.stylua.with({
       extra_args = { "--config-path", vim.fn.expand("~/.config/stylua.toml") },
     }),
     require("null-ls").builtins.completion.luasnip.with({
-      filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "html", "scss", "css", "json" }
+      filetypes = {
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "vue",
+        "html",
+        "scss",
+        "css",
+        "json",
+      },
     }),
     require("null-ls").builtins.completion.spell.with({
-      filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "html", "scss", "css", "json" }
+      filetypes = {
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "vue",
+        "html",
+        "scss",
+        "css",
+        "json",
+      },
     }),
   },
 })
@@ -190,9 +220,12 @@ lspconfig.vimls.setup({
 -- })
 
 if vim.fn.executable("lua-language-server") > 0 then
-
   lspconfig.lua_ls.setup({
-    on_attach = custom_attach,
+    on_attach = function(client, bufnr)
+      client.server_capabilities.documentFormattingProvider = false
+      client.server_capabilities.document_range_formatting = false
+      custom_attach(client, bufnr)
+    end,
     settings = {
       Lua = {
         runtime = {
