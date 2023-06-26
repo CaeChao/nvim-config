@@ -55,10 +55,10 @@ local options = {
   },
   pickers = {
     lsp_definitions = {
-      show_line = false
+      show_line = false,
     },
     lsp_references = {
-      show_line = false
+      show_line = false,
     },
     find_files = {
       theme = "dropdown",
@@ -70,6 +70,7 @@ local options = {
       file_ignore_patterns = { "node_modules" },
       path_display = { "truncate" },
       winblend = 10,
+      find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
     },
     buffers = {
       theme = "dropdown",

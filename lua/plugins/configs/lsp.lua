@@ -117,7 +117,7 @@ require("null-ls").setup({
     }),
     require("null-ls").builtins.formatting.prettier.with({
       prefer_local = "node_modules/.bin",
-      filetypes = { "html", "scss", "css", "json", "yaml", "markdown" },
+      filetypes = { "html", "scss", "less", "css", "json", "yaml", "markdown" },
     }),
     require("null-ls").builtins.code_actions.gitsigns.with({
       filetypes = {

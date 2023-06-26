@@ -3,10 +3,9 @@ local api = vim.api
 
 -- Remap
 vim.g.mapleader = "'"
-keymap.set({ "i", "x", }, "jk", "<Esc>")
+keymap.set({ "i", "x" }, "jk", "<Esc>")
 keymap.set("c", "jk", "<C-c>")
 keymap.set({ "n", "x" }, ";", ":")
-
 
 -- Leader shortcuts
 keymap.set("n", "<leader>f", "<cmd>TZAtaraxis<cr>", { desc = "toggle ZenMode" })
@@ -60,7 +59,6 @@ keymap.set("n", "<leader>a", "<cmd>lua require('telescope.builtin').live_grep()<
 keymap.set("n", "<leader>m", "<cmd>lua require('telescope').extensions.media_files.media_files()<cr>")
 keymap.set("n", "<leader>gs", "<cmd>lua require('telescope.builtin').grep_string()<cr>")
 
-
 -- Trouble
 keymap.set("n", "<leader>xx", "<cmd>TroubleToggle<cr>")
 keymap.set("n", "<leader>xw", "<cmd>TroubleToggle lsp_workspace_diagnostics<cr>")
@@ -73,7 +71,6 @@ keymap.set("n", "gR", "<cmd>TroubleToggle lsp_references<cr>")
 keymap.set("n", "<leader>mp", "<Plug>MarkdownPreview", { noremap = true })
 keymap.set("n", "<leader>ms", "<Plug>MarkdownPreviewStop", { noremap = true })
 
-
 -- VimWiki
 -- keymap.set("n", "<leader>gl", "<cmd>ZettelGenerateLinks<cr>")
 -- keymap.set("n", "<leader>twr", "<cmd>TaskWikiBufferLoad<cr>")
@@ -81,8 +78,23 @@ keymap.set("n", "<leader>ms", "<Plug>MarkdownPreviewStop", { noremap = true })
 -- keymap.set("n", "<leader>c", "<cmd>Calendar<CR>")
 
 -- Debugger
-keymap.set("n", "bp", "<cmd>lua require('persistent-breakpoints.api').toggle_breakpoint()<cr>", { noremap = true, silent = true })
-keymap.set("n", "cb", "<cmd>lua require('persistent-breakpoints.api').clear_all_breakpoints()<cr>", { noremap = true, silent = true })
-keymap.set("n", "]d", require('goto-breakpoints').next, {})
-keymap.set("n", "[d", require('goto-breakpoints').prev, {})
+keymap.set(
+  "n",
+  "bp",
+  "<cmd>lua require('persistent-breakpoints.api').toggle_breakpoint()<cr>",
+  { noremap = true, silent = true }
+)
+keymap.set(
+  "n",
+  "cb",
+  "<cmd>lua require('persistent-breakpoints.api').clear_all_breakpoints()<cr>",
+  { noremap = true, silent = true }
+)
+keymap.set("n", "]d", require("goto-breakpoints").next, {})
+keymap.set("n", "[d", require("goto-breakpoints").prev, {})
 keymap.set("n", "<leader>db", "<cmd>lua require('dapui').toggle()<cr>", { noremap = true, silent = true })
+
+-- fugitive
+keymap.set("n", "<leader>1", "<cmd>diffput //1<CR>", {})
+keymap.set("n", "<leader>2", "<cmd>diffget //2<CR>", {})
+keymap.set("n", "<leader>3", "<cmd>diffget //3<CR>", {})

@@ -49,6 +49,8 @@ end
 
 M.colorizer = {
   "css",
+  "less",
+  "scss",
   "javascript",
   "lua",
   html = {
