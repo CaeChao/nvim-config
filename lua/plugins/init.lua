@@ -52,7 +52,7 @@ local plugins_list = {
     end,
   },
 
-  "MaxMEllon/vim-jsx-pretty",
+  { "MaxMEllon/vim-jsx-pretty", ft = { "javascriptreact", "typescriptreact" } },
 
   {
     "norcalli/nvim-colorizer.lua",
@@ -61,6 +61,10 @@ local plugins_list = {
     end,
     config = function(_, opts)
       require("colorizer").setup(opts)
+
+      vim.defer_fn(function()
+        require("colorizer").attach_to_buffer(0)
+      end, 0)
     end,
   },
 
@@ -86,6 +90,7 @@ local plugins_list = {
   {
     "lewis6991/gitsigns.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = { "Gitsigns" },
     opts = function()
       return require("plugins.configs.others").gitsigns
     end,
@@ -200,10 +205,11 @@ local plugins_list = {
     lazy = true,
   },
 
-  --   {
-  --     "williamboman/mason.nvim",
-  --     build = ":MasonUpdate", -- :MasonUpdate updates registry contents
-  --   },
+  {
+    "williamboman/mason.nvim",
+    cmd = { "Mason", "MasonInstall", "MasonUninstall", "MasonUninstallAll", "MasonLog" },
+    build = ":MasonUpdate", -- :MasonUpdate updates registry contents
+  },
 
   -- LSP
   {
