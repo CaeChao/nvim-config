@@ -1,24 +1,29 @@
 local M = {}
 
 M.blankline = {
-  char = "▏",
-  show_trailing_blankline_indent = false,
-  show_first_indent_level = false,
-  -- space_char_blankline = " ",
-  indentLine_enabled = 1,
-  filetype_exclude = {
-    "help",
-    "terminal",
-    "markdown",
-    "pandoc",
-    "vimwiki",
-    "dashboard",
-    "packer",
-    "lspinfo",
-    "TelescopePrompt",
-    "TelescopeResults",
+  indent = {
+    char = "▏",
   },
-  buftype_exclude = { "terminal" },
+  scope = {
+    show_start = false,
+    show_end = false,
+  },
+  exclude = {
+    filetypes = {
+      "help",
+      "git",
+      "snippets",
+      "terminal",
+      "markdown",
+      "pandoc",
+      "vimwiki",
+      "dashboard",
+      "lspinfo",
+      "TelescopePrompt",
+      "TelescopeResults",
+    },
+    buftypes = { "terminal" },
+  },
 }
 
 M.luasnip = function(opts)
@@ -38,8 +43,8 @@ M.luasnip = function(opts)
   vim.api.nvim_create_autocmd("InsertLeave", {
     callback = function()
       if
-          require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()]
-          and not require("luasnip").session.jump_active
+        require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()]
+        and not require("luasnip").session.jump_active
       then
         require("luasnip").unlink_current()
       end

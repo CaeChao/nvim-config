@@ -70,12 +70,13 @@ local plugins_list = {
 
   {
     "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
     event = { "BufReadPost", "BufNewFile" },
     opts = function()
       return require("plugins.configs.others").blankline
     end,
     config = function(_, opts)
-      require("indent_blankline").setup(opts)
+      require("ibl").setup(opts)
     end,
   },
 
@@ -156,6 +157,8 @@ local plugins_list = {
       -- snippet engine and snippet template
       {
         "L3MON4D3/LuaSnip",
+        version = "v2.*",
+        build = "make install_jsregexp",
         dependencies = "rafamadriz/friendly-snippets",
         opts = { history = true, updateevents = "TextChanged,TextChangedI" },
         config = function(_, opts)
