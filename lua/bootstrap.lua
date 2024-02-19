@@ -11,9 +11,8 @@ M.init = function(install_path)
     M.echo("  Installing lazy.nvim & plugins ...")
     local lazy_repo = "https://github.com/folke/lazy.nvim.git"
     vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazy_repo, install_path })
+
   end
-  -- mason packages & show post_boostrap screen
-  -- require "nvchad.post_bootstrap"()
 end
 
 return M
