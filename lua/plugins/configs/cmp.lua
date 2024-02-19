@@ -69,7 +69,10 @@ local options = {
   },
   formatting = {
     format = require("lspkind").cmp_format({
-      with_text = true,
+      mode = 'symbol',
+      maxwidth = 50,
+      ellipsis_char = '...',
+      show_labelDetails = true,
       menu = {
         nvim_lsp = "[LSP]",
         luasnip = "[LuaSnip]",

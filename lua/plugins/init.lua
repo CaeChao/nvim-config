@@ -80,7 +80,7 @@ local plugins_list = {
     end,
   },
 
-  { "vim-pandoc/vim-pandoc", ft = { "markdown", "vimwiki", "pandoc" } },
+  { "vim-pandoc/vim-pandoc", ft = { "markdown", "pandoc", "vimwiki" } },
   { "vim-pandoc/vim-pandoc-syntax", ft = { "markdown", "pandoc", "vimwiki" } },
   { "elzr/vim-json", ft = { "json" } },
   { "chrisbra/csv.vim", ft = { "csv" } },
@@ -212,15 +212,34 @@ local plugins_list = {
     "williamboman/mason.nvim",
     cmd = { "Mason", "MasonInstall", "MasonUninstall", "MasonUninstallAll", "MasonLog" },
     build = ":MasonUpdate", -- :MasonUpdate updates registry contents
+    config = function()
+      require("mason").setup({})
+    end,
+  },
+
+  {
+    "williamboman/mason-lspconfig.nvim",
+    cmd = { "LspInstall", "LspUninstall" },
+    dependencies = { "mason.nvim" },
+    config = function()
+      require("mason-lspconfig").setup({})
+    end,
   },
 
   -- LSP
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
+    dependencies = { "mason-lspconfig.nvim" },
     config = function()
-      require("plugins.configs.lsp")
+      require("plugins.configs.lsp").setup()
     end,
+  },
+
+  {
+    "nvimtools/none-ls.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = { "nvim-lua/plenary.nvim" },
   },
 
   {
@@ -238,8 +257,7 @@ local plugins_list = {
     end,
   },
 
-  "jose-elias-alvarez/null-ls.nvim",
-  "jose-elias-alvarez/nvim-lsp-ts-utils",
+  -- "jose-elias-alvarez/nvim-lsp-ts-utils",
 
   -- Debugger
   {

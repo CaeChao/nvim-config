@@ -72,7 +72,7 @@ local options = {
           error = " ",
           warn = " ",
           info = " ",
-          hint = " ",
+          hint = " ",
         },
       },
       lsp_progress,
