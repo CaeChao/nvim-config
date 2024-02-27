@@ -3,10 +3,7 @@ local options = {
     close_command = "bdelete! %d",
     right_mouse_command = nil,
     left_mouse_command = "buffer %d",
-    modified_icon = "",
     show_close_icon = true,
-    left_trunc_marker = "",
-    right_trunc_marker = "",
     max_name_length = 14,
     max_prefix_length = 13,
     tab_size = 20,
@@ -18,6 +15,15 @@ local options = {
     diagnostics = "nvim_lsp",
     persist_buffer_sort = true,
     separator_style = "slant",
+    indicator = {
+      icon = icons.ui.BoldLineLeft, -- this should be omitted if indicator style is not 'icon'
+      style = "icon", -- can also be 'underline'|'none',
+    },
+    buffer_close_icon = icons.ui.Close,
+    modified_icon = icons.ui.Circle,
+    close_icon = icons.ui.BoldClose,
+    left_trunc_marker = icons.ui.ArrowCircleLeft,
+    right_trunc_marker = icons.ui.ArrowCircleRight,
     offsets = {
       {
         filetype = "NvimTree",

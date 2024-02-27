@@ -1,4 +1,4 @@
-function lsp_progress()
+local function lsp_progress()
   local Lsp = vim.lsp.util.get_progress_messages()[1]
   if Lsp then
     local msg = Lsp.message or ""
@@ -47,21 +47,21 @@ end
 local options = {
   options = {
     -- theme = 'gruvbox-material',
-    component_separators = { left = "|", right = "|" },
-    section_separators = { left = " ", right = "" },
+    component_separators = { left = icons.ui.LineLeft, right = icons.ui.LineMiddle },
+    section_separators = { left = icons.ui.BoldDividerLeft, right = icons.ui.HalfCircleLeft },
   },
   sections = {
     lualine_a = {
       { "mode", left_padding = 0, right_padding = 1 },
     },
     lualine_b = {
-      { "filetype", icon_only = true,  separator = "" },
+      { "filetype", icon_only = true, separator = "" },
       { "filename", file_status = true },
     },
     lualine_c = {
       {
         "diagnostics",
-        sources = { "nvim_diagnostic", "coc" },
+        sources = { "nvim_diagnostic" },
         diagnostics_color = {
           error = { fg = "#db4b4b" },
           warn = { fg = "#e0af68" },
@@ -69,10 +69,10 @@ local options = {
           hint = { fg = "#10B981" },
         },
         symbols = {
-          error = " ",
-          warn = " ",
-          info = " ",
-          hint = " ",
+          error = icons.diagnostics.BoldError .. " ",
+          warn = icons.diagnostics.BoldWarning .. " ",
+          info = icons.diagnostics.BoldInformation .. " ",
+          hint = icons.diagnostics.BoldHint .. " ",
         },
       },
       lsp_progress,
@@ -80,7 +80,11 @@ local options = {
     lualine_x = {
       {
         "diff",
-        symbols = { added = " ", modified = " ", removed = " " },
+        symbols = {
+          added = icons.git.LineAdded .. " ",
+          modified = icons.git.LineModified .. " ",
+          removed = icons.git.LineRemoved .. " ",
+        },
         source = diff_source,
         separator = "",
       },
@@ -88,7 +92,7 @@ local options = {
     },
     lualine_y = { "progress" },
     lualine_z = {
-      { "location", separator = { right = "" }, left_padding = 2 },
+      { "location", separator = { right = icons.ui.HalfCircleRight }, left_padding = 2 },
     },
   },
 }

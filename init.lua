@@ -4,6 +4,7 @@ if not vim.tbl_contains(vim.opt.rtp:get(), lazy_dir) then
   vim.opt.rtp:prepend(lazy_dir)
 end
 
+icons = vim.deepcopy(require("icons"))
 require("core.settings").load_defaults()
 
 require("bootstrap").init(lazy_dir)
