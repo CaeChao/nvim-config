@@ -1,38 +1,63 @@
 local api = vim.api
-local keymap = vim.keymap
 local lsp = vim.lsp
 
 local M = {}
 
 function M.common_on_attach(client, bufnr)
-  -- Mappings.
-  local map = function(mode, l, r, opts)
-    opts = opts or {}
-    opts.silent = true
-    opts.buffer = bufnr
-    keymap.set(mode, l, r, opts)
+  local lsp_formatting = function(buf)
+    lsp.buf.format({
+      async = true,
+      filter = function(clt)
+        local filetype = vim.bo.filetype
+        local n = require("null-ls")
+        local s = require("null-ls.sources")
+        local method = n.methods.FORMATTING
+        local available_formatters = s.get_available(filetype, method)
+
+        if #available_formatters > 0 then
+          return clt.name == "null-ls"
+        elseif clt.server_capabilities.documentFormattingProvider then
+          return true
+        else
+          return false
+        end
+      end,
+      bufnr = buf,
+    })
   end
 
-  -- Mappings.
-  local opts = { noremap = true, silent = true }
-  map("n", "gd", "<cmd>lua require('telescope.builtin').lsp_definitions()<CR>", opts)
-  map("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-  map("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-  map("n", "gk", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-  map("n", "<space>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
-  map("n", "<space>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
-  map("n", "<space>wl", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", opts)
-  map("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-  map("n", "gr", "<cmd>lua require('telescope.builtin').lsp_references()<CR>", opts)
-  map("n", "gy", "<cmd>lua require('telescope.builtin').lsp_type_definitions()<CR>", opts)
-  map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-  map("n", "ge", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
-  map("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<CR>", opts)
-  map("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<CR>", opts)
-  map("n", "<space>q", "<cmd>lua vim.diagnostic.setqflist()<CR>", opts)
-  map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+  local key_mappings = {
+    normal_mode = {
+      ["gd"] = { "<cmd>lua require('telescope.builtin').lsp_definitions()<CR>", "Goto Definition" },
+      ["gD"] = { "<cmd>lua vim.lsp.buf.declaration()<CR>", "Goto Declaration" },
+      ["K"] = { "<cmd>lua vim.lsp.buf.hover()<CR>", "Show Hover" },
+      ["gk"] = { "<cmd>lua vim.lsp.buf.signature_help()<CR>", "Show Signature Help" },
+      ["<space>wa"] = { "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", "Add Workspace" },
+      ["<space>wr"] = { "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", "Remove Workspace" },
+      ["<space>wl"] = { "<cmd>lua print(inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Show Workspace List" },
+      ["<space>f"] = { lsp_formatting, "Format Buffer" },
+      ["<leader>rn"] = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename" },
+      ["gr"] = { "<cmd>lua require('telescope.builtin').lsp_references()<CR>", "Goto References" },
+      ["gy"] = { "<cmd>lua require('telescope.builtin').lsp_type_definitions()<CR>", "Goto Type Definitions" },
+      ["gi"] = { "<cmd>lua vim.lsp.buf.implementation()<CR>", "Goto Implementation" },
+      ["ge"] = { "<cmd>lua vim.diagnostic.open_float()<CR>", "Open Float" },
+      ["[d"] = { "<cmd>lua vim.diagnostic.goto_prev()<CR>", "Goto Prev" },
+      ["]d"] = { "<cmd>lua vim.diagnostic.goto_next()<CR>", "Goto Next" },
+      ["<space>q"] = { "<cmd>lua vim.diagnostic.setqflist()<CR>", "Quick Fix List" },
+      ["<leader>ca"] = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "Code Action" },
+    },
+    insert_mode = {},
+    visual_mode = {},
+  }
 
-  vim.o.updatetime = 250
+  local lu = require("configs.lsp.utils")
+
+  vim.o.updatetime = 150
+
+  lu.setup_codelens_refresh(client, bufnr)
+
+  lu.add_lsp_key_mappings(bufnr, key_mappings)
+
   api.nvim_create_autocmd("CursorHold", {
     buffer = bufnr,
     callback = function()
@@ -60,46 +85,7 @@ function M.common_on_attach(client, bufnr)
     end,
   })
 
-  local lsp_formatting = function(buf)
-    vim.lsp.buf.format({
-      async = true,
-      filter = function(clt)
-        -- apply whatever logic you want (in this example, we'll only use null-ls)
-        return clt.name == "null-ls"
-      end,
-      bufnr = buf,
-    })
-  end
-  -- Set some key bindings conditional on server capabilities
-  if client.server_capabilities.documentFormattingProvider then
-    map("n", "<space>f", lsp_formatting, opts)
-  end
-
-  -- The blow command will highlight the current variable and its usages in the buffer.
-  if client.server_capabilities.documentHighlightProvider then
-    vim.cmd([[
-      hi link LspReferenceRead Visual
-      hi link LspReferenceText Visual
-      hi link LspReferenceWrite Visual
-    ]])
-
-    local augroup = api.nvim_create_augroup("lsp_document_highlight", { clear = true })
-    api.nvim_create_autocmd("CursorHold", {
-      group = augroup,
-      buffer = bufnr,
-      callback = function()
-        lsp.buf.document_highlight()
-      end,
-    })
-
-    api.nvim_create_autocmd("CursorMoved", {
-      group = augroup,
-      buffer = bufnr,
-      callback = function()
-        lsp.buf.clear_references()
-      end,
-    })
-  end
+  lu.setup_document_highlight(client, bufnr)
 
   if vim.g.logging_level == "debug" then
     local msg = string.format("Language server %s started!", client.name)
@@ -130,40 +116,41 @@ function M.common_capabilities()
   return capabilities
 end
 
--- TODO: replace deprecated typescript language plugin
--- lspconfig.tsserver.setup({
---   init_options = require("").init_options,
---   on_attach = function(client, bufnr)
---     client.server_capabilities.documentFormattingProvider = false
---     client.server_capabilities.document_range_formatting = false
---     local ts_utils = require("nvim-lsp-ts-utils")
---     ts_utils.setup({
---       eslint_bin = "eslint_d",
---       enable_formatting = true,
---       formatter = "eslint_d",
---       formatter_args = {
---         "--fix-to-stdout",
---         "--stdin",
---         "--stdin-filename",
---         "$FILENAME",
---       },
---       filter_out_diagnostics_by_code = { 80001 },
---     })
---     ts_utils.setup_client(client)
-
---     custom_attach(client, bufnr)
---   end,
---   flags = {
---     debounce_text_changes = 150,
---   },
---   capabilities = capabilities,
--- })
-
 function M.setup()
   local lsp_status_ok, lspconfig = pcall(require, "lspconfig")
   if not lsp_status_ok then
     return
   end
+
+  -- launch server
+  -- TODO: replace deprecated typescript language plugin
+  -- lspconfig.tsserver.setup({
+  --   init_options = require("").init_options,
+  --   on_attach = function(client, bufnr)
+  --     client.server_capabilities.documentFormattingProvider = false
+  --     client.server_capabilities.document_range_formatting = false
+  --     local ts_utils = require("nvim-lsp-ts-utils")
+  --     ts_utils.setup({
+  --       eslint_bin = "eslint_d",
+  --       enable_formatting = true,
+  --       formatter = "eslint_d",
+  --       formatter_args = {
+  --         "--fix-to-stdout",
+  --         "--stdin",
+  --         "--stdin-filename",
+  --         "$FILENAME",
+  --       },
+  --       filter_out_diagnostics_by_code = { 80001 },
+  --     })
+  --     ts_utils.setup_client(client)
+
+  --     custom_attach(client, bufnr)
+  --   end,
+  --   flags = {
+  --     debounce_text_changes = 150,
+  --   },
+  --   capabilities = capabilities,
+  -- })
 
   lspconfig.cssls.setup({
     on_attach = M.common_on_attach,
@@ -192,7 +179,7 @@ function M.setup()
     },
     capabilities = M.common_capabilities(),
   })
-  
+
   lspconfig.clangd.setup({
     on_attach = M.common_on_attach,
     filetypes = { "c", "cpp", "cc" },
@@ -201,7 +188,7 @@ function M.setup()
     },
     capabilities = M.common_capabilities(),
   })
-  
+
   -- set up vim-language-server
   lspconfig.vimls.setup({
     on_attach = M.common_on_attach,
@@ -210,7 +197,7 @@ function M.setup()
     },
     capabilities = M.common_capabilities(),
   })
-  
+
   -- lspconfig.eslint.setup({
   --   on_attach = custom_attach,
   --   flags = {
@@ -218,7 +205,7 @@ function M.setup()
   --   },
   --   capabilities = capabilities,
   -- })
-  
+
   if vim.fn.executable("lua-language-server") > 0 then
     lspconfig.lua_ls.setup({
       on_attach = M.common_on_attach,
@@ -247,37 +234,37 @@ function M.setup()
       capabilities = M.common_capabilities(),
     })
   end
-  
-  -- Lsp Handlers
-  
-  -- replace the default lsp diagnostic symbols
-  local function lspSymbol(name, icon)
-    local hl = "DiagnosticSign" .. name
-    vim.fn.sign_define(hl, { text = icon, numhl = hl, texthl = hl })
-  end
-  
-  lspSymbol("Error", "")
-  lspSymbol("Warn", "")
-  lspSymbol("Info", "")
-  lspSymbol("Hint", "")
-  
-  -- vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-  
+
   vim.diagnostic.config({
     virtual_text = false,
-    signs = true,
     underline = false,
     update_in_insert = false, -- update diagnostics insert mode
+    severity_sort = true,
+    signs = {
+      active = true,
+      values = {
+        { name = "DiagnosticSignError", text = icons.diagnostics.Error },
+        { name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
+        { name = "DiagnosticSignHint", text = icons.diagnostics.Hint },
+        { name = "DiagnosticSignInfo", text = icons.diagnostics.Information },
+      },
+    },
   })
-  
+
+  -- replace the default lsp diagnostic symbols
+  for _, sign in ipairs(vim.tbl_get(vim.diagnostic.config(), "signs", "values") or {}) do
+    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
+  end
+
+  -- Set Lsp Handlers
   -- See https://github.com/neovim/neovim/pull/13998.
   lsp.handlers["textDocument/hover"] = lsp.with(vim.lsp.handlers.hover, {
     border = "rounded",
   })
-  
-  lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
-  
-  require("plugins.configs.null-ls").setup()
+
+  lsp.handlers["textDocument/signatureHelp"] = lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
+
+  require("configs.lsp.null-ls").setup()
 end
 
 return M

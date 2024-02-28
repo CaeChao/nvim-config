@@ -9,14 +9,10 @@ function M.setup()
 
   null_ls.setup({
     debug = true,
-    on_attach = require("plugins.configs.lsp").common_on_attach,
+    on_attach = require("configs.lsp").common_on_attach,
     sources = {
-      null_ls.builtins.diagnostics.eslint_d.with({
-        prefer_local = "node_modules/.bin",
-      }),
-      null_ls.builtins.formatting.eslint_d.with({
-        prefer_local = "node_modules/.bin",
-      }),
+      require("none-ls.code_actions.eslint_d"),
+      require("none-ls.diagnostics.eslint_d"),
       null_ls.builtins.formatting.prettier.with({
         prefer_local = "node_modules/.bin",
         filetypes = { "html", "scss", "less", "css", "json", "yaml", "markdown" },

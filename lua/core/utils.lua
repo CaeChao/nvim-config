@@ -12,9 +12,10 @@ M.executable = function(name)
   return false
 end
 
-
 M.add_pack = function(name)
-  local status, error = pcall(vim.cmd, "Lazy load " .. name)
+  local status, error = pcall(function()
+    vim.cmd(string.format("Lazy load %s", name))
+  end)
 
   return error
 end

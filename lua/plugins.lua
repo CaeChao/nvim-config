@@ -12,7 +12,7 @@ local plugins_list = {
     event = "VimEnter",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = function()
-      return require("plugins.configs.lualine")
+      return require("configs.lualine")
     end,
     config = function(_, opts)
       require("lualine").setup(opts)
@@ -25,7 +25,7 @@ local plugins_list = {
     version = "*",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = function()
-      return require("plugins.configs.bufferline")
+      return require("configs.bufferline")
     end,
     config = function(_, opts)
       require("bufferline").setup(opts)
@@ -39,19 +39,19 @@ local plugins_list = {
     cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
     build = ":TSUpdate",
     opts = function()
-      return require("plugins.configs.treesitter")
+      return require("configs.treesitter")
     end,
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
     end,
   },
 
-  { "MaxMEllon/vim-jsx-pretty", ft = { "javascriptreact", "typescriptreact" } },
+  { "MaxMEllon/vim-jsx-pretty",     ft = { "javascriptreact", "typescriptreact" } },
 
   {
     "norcalli/nvim-colorizer.lua",
     opts = function()
-      return require("plugins.configs.others").colorizer
+      return require("configs.others").colorizer
     end,
     config = function(_, opts)
       require("colorizer").setup(opts)
@@ -67,19 +67,19 @@ local plugins_list = {
     main = "ibl",
     event = { "BufReadPost", "BufNewFile" },
     opts = function()
-      return require("plugins.configs.others").blankline
+      return require("configs.others").blankline
     end,
     config = function(_, opts)
       require("ibl").setup(opts)
     end,
   },
 
-  { "vim-pandoc/vim-pandoc", ft = { "markdown", "pandoc", "vimwiki" } },
+  { "vim-pandoc/vim-pandoc",        ft = { "markdown", "pandoc", "vimwiki" } },
   { "vim-pandoc/vim-pandoc-syntax", ft = { "markdown", "pandoc", "vimwiki" } },
-  { "elzr/vim-json", ft = { "json" } },
-  { "chrisbra/csv.vim", ft = { "csv" } },
+  { "elzr/vim-json",                ft = { "json" } },
+  { "chrisbra/csv.vim",             ft = { "csv" } },
 
-  { "liuchengxu/graphviz.vim", ft = { "gv", "dot" } },
+  { "liuchengxu/graphviz.vim",      ft = { "gv", "dot" } },
 
   -- Git Integration
   {
@@ -87,21 +87,21 @@ local plugins_list = {
     dependencies = { "nvim-lua/plenary.nvim" },
     cmd = { "Gitsigns" },
     opts = function()
-      return require("plugins.configs.others").gitsigns
+      return require("configs.others").gitsigns
     end,
     config = function(_, opts)
       require("gitsigns").setup(opts)
     end,
   },
 
-  { "tpope/vim-fugitive", lazy = true, cmd = { "G", "Git" } },
+  { "tpope/vim-fugitive",            lazy = true,       cmd = { "G", "Git" } },
 
   -- File explorer, picker etc
   {
     "nvim-tree/nvim-tree.lua",
     cmd = { "NvimTreeToggle", "NvimTreeFocus" },
     opts = function()
-      return require("plugins.configs.nvimtree")
+      return require("configs.nvimtree")
     end,
     config = function(_, opts)
       require("nvim-tree").setup(opts)
@@ -124,7 +124,7 @@ local plugins_list = {
       },
     },
     opts = function()
-      return require("plugins.configs.telescope")
+      return require("configs.telescope")
     end,
     config = function(_, opts)
       local telescope = require("telescope")
@@ -156,7 +156,7 @@ local plugins_list = {
         dependencies = "rafamadriz/friendly-snippets",
         opts = { history = true, updateevents = "TextChanged,TextChangedI" },
         config = function(_, opts)
-          require("plugins.configs.others").luasnip(opts)
+          require("configs.others").luasnip(opts)
         end,
       },
 
@@ -189,7 +189,7 @@ local plugins_list = {
       --  { 'honza/vim-snippets', event = 'InsertEnter' }
     },
     opts = function()
-      return require("plugins.configs.cmp")
+      return require("configs.cmp")
     end,
     config = function(_, opts)
       require("cmp").setup(opts)
@@ -226,15 +226,16 @@ local plugins_list = {
     event = { "BufReadPre", "BufNewFile" },
     dependencies = { "mason-lspconfig.nvim" },
     config = function()
-      require("plugins.configs.lsp").setup()
+      require("configs.lsp").setup()
     end,
   },
 
   {
     "nvimtools/none-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "nvim-lua/plenary.nvim" },
+    dependencies = { "nvim-lua/plenary.nvim", "nvimtools/none-ls-extras.nvim" }
   },
+
 
   {
     "folke/trouble.nvim",
@@ -262,7 +263,7 @@ local plugins_list = {
       -- stylua: ignore
       opts = {},
       config = function(_, opts)
-        require("plugins.configs.dap").setup_ui(opts)
+        require("configs.dap").setup_ui(opts)
       end,
     },
   },
@@ -277,20 +278,20 @@ local plugins_list = {
   { "ofirgall/goto-breakpoints.nvim" },
   -- Edit
 
-  { "tpope/vim-unimpaired", event = "VimEnter" },
-  { "tpope/vim-repeat", event = "VimEnter" },
-  { "tpope/vim-endwise", event = "VimEnter" },
-  { "tpope/vim-surround", event = "VimEnter" },
-  { "tpope/vim-abolish", event = "VimEnter" },
-  { "tpope/vim-commentary", event = "VimEnter" },
-  { "tpope/vim-sleuth", event = "VimEnter" },
-  { "tpope/vim-dispatch", lazy = true },
+  { "tpope/vim-unimpaired",          event = "VimEnter" },
+  { "tpope/vim-repeat",              event = "VimEnter" },
+  { "tpope/vim-endwise",             event = "VimEnter" },
+  { "tpope/vim-surround",            event = "VimEnter" },
+  { "tpope/vim-abolish",             event = "VimEnter" },
+  { "tpope/vim-commentary",          event = "VimEnter" },
+  { "tpope/vim-sleuth",              event = "VimEnter" },
+  { "tpope/vim-dispatch",            lazy = true },
   { "radenling/vim-dispatch-neovim", lazy = true },
-  { "andymass/vim-matchup", lazy = true },
+  { "andymass/vim-matchup",          lazy = true },
   {
     "Pocco81/true-zen.nvim",
     opts = function()
-      require("plugins.configs.others").truezen()
+      require("configs.others").truezen()
     end,
     config = function(_, opts)
       require("true-zen").setup(opts)
@@ -302,7 +303,7 @@ local plugins_list = {
   {
     "iamcco/markdown-preview.nvim",
     init = function()
-      require("plugins.configs.others").md_preview()
+      require("configs.others").md_preview()
     end,
     build = function()
       vim.fn["mkdp#util#install"]()
@@ -316,7 +317,7 @@ local plugins_list = {
   {
     "liuchengxu/vista.vim",
     init = function()
-      require("plugins.configs.others").vista()
+      require("configs.others").vista()
     end,
     cmd = "Vista",
   },
@@ -330,7 +331,7 @@ local plugins_list = {
     },
     config = function(_, opts)
       require("neoscroll").setup(opts)
-      local t = require("plugins.configs.neoscroll")
+      local t = require("configs.neoscroll")
       require("neoscroll.config").set_mappings(t)
     end,
   },
@@ -345,7 +346,7 @@ local plugins_list = {
     },
     config = function(_, opts)
       require("hlslens").setup(opts)
-      require("plugins.configs.hlslens").load_mappings()
+      require("configs.hlslens").load_mappings()
     end,
   },
 
@@ -355,7 +356,7 @@ local plugins_list = {
     event = "BufEnter",
     config = function()
       vim.defer_fn(function()
-        require("plugins.configs.notify")
+        require("configs.notify")
       end, 2000)
     end,
   },
@@ -365,7 +366,7 @@ local plugins_list = {
     "sainnhe/gruvbox-material",
     lazy = false,
     init = function()
-      require("plugins.configs.colorscheme").gruvbox()
+      require("configs.colorscheme").gruvbox()
     end,
     priority = 1000,
     config = function()
@@ -383,7 +384,7 @@ local plugins_list = {
   {
     "vimwiki/vimwiki",
     init = function()
-      require("plugins.configs.vimwiki").vimwiki()
+      require("configs.vimwiki").vimwiki()
     end,
     ft = { "vimwiki", "markdown", "pandoc" },
     config = function()
@@ -396,25 +397,25 @@ local plugins_list = {
   {
     "CaeChao/vim-zettel",
     init = function()
-      require("plugins.configs.vimwiki").zettel()
+      require("configs.vimwiki").zettel()
     end,
     ft = { "vimwiki" },
   },
   {
     "tools-life/taskwiki",
     init = function()
-      require("plugins.configs.vimwiki").taskwiki()
+      require("configs.vimwiki").taskwiki()
     end,
     ft = { "vimwiki" },
   },
-  { "blindFS/vim-taskwarrior", ft = { "vimwiki" } },
+  { "blindFS/vim-taskwarrior",     ft = { "vimwiki" } },
   { "powerman/vim-plugin-AnsiEsc", ft = { "vimwiki" } },
-  { "mattn/calendar-vim", ft = { "vimwiki" } },
+  { "mattn/calendar-vim",          ft = { "vimwiki" } },
 }
 
 function M.load()
   local lazy_available, lazy = pcall(require, "lazy")
-  local lazy_nvim = require("plugins.configs.lazy_nvim")
+  local lazy_nvim = require("configs.lazy_nvim")
   if not lazy_available then
     vim.notify("skipping loading plugins until lazy.nvim is installed", vim.log.levels.ERROR, { title = "lazy.nvim" })
     return
