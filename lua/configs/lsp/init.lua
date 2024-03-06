@@ -243,10 +243,10 @@ function M.setup()
     signs = {
       active = true,
       values = {
-        { name = "DiagnosticSignError", text = icons.diagnostics.Error },
-        { name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
-        { name = "DiagnosticSignHint", text = icons.diagnostics.Hint },
-        { name = "DiagnosticSignInfo", text = icons.diagnostics.Information },
+        { name = "DiagnosticSignError", text = icons.diagnostics.BoldError },
+        { name = "DiagnosticSignWarn", text = icons.diagnostics.BoldWarning },
+        { name = "DiagnosticSignHint", text = icons.diagnostics.BoldHint },
+        { name = "DiagnosticSignInfo", text = icons.diagnostics.BoldInformation },
       },
     },
   })
@@ -263,6 +263,15 @@ function M.setup()
   })
 
   lsp.handlers["textDocument/signatureHelp"] = lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
+  lsp.handlers["window/showMessage"] = function(_, method, params)
+    local severity = {
+      vim.log.levels.ERROR,
+      vim.log.levels.WARN,
+      vim.log.levels.INFO,
+      vim.log.levels.INFO,
+    }
+    vim.notify(method.message, severity[params.type], { title = "LSP" })
+  end
 
   require("configs.lsp.null-ls").setup()
 end

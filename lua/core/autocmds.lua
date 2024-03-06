@@ -48,16 +48,22 @@ api.nvim_create_autocmd("FileType", {
   command = "wincmd L",
 })
 
--- local function check_git_repo()
---   local cmd = "git rev-parse --is-inside-work-tree"
---   if vim.fn.system(cmd) == "true\n" then
---     api.nvim_exec_autocmds("User", { pattern = "InGitRepo" })
---     return true -- removes autocmd after lazy loading git related plugins
---   end
--- end
+api.nvim_create_autocmd("User", {
+  group = augroup("lualine_augroup"),
+  pattern = "LspProgressStatusUpdated",
+  callback = require("lualine").refresh,
+})
 
--- api.nvim_create_autocmd({ "VimEnter", "DirChanged" }, {
---   callback = function()
---     vim.schedule(check_git_repo)
---   end,
--- })
+local function check_git_repo()
+  local cmd = "git rev-parse --is-inside-work-tree"
+  if vim.fn.system(cmd) == "true\n" then
+    api.nvim_exec_autocmds("User", { pattern = "InGitRepo" })
+    return true -- removes autocmd after lazy loading git related plugins
+  end
+end
+
+api.nvim_create_autocmd({ "VimEnter", "DirChanged" }, {
+  callback = function()
+    vim.schedule(check_git_repo)
+  end,
+})

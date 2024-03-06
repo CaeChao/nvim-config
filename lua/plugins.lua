@@ -1,143 +1,6 @@
 local M = {}
 local plugins_list = {
 
-  -- Icon
-  {
-    "nvim-tree/nvim-web-devicons",
-  },
-
-  -- StatusLine & Bufferline
-  {
-    "nvim-lualine/lualine.nvim",
-    event = "VimEnter",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = function()
-      return require("configs.lualine")
-    end,
-    config = function(_, opts)
-      require("lualine").setup(opts)
-    end,
-  },
-
-  {
-    "akinsho/bufferline.nvim",
-    event = "VimEnter",
-    version = "*",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = function()
-      return require("configs.bufferline")
-    end,
-    config = function(_, opts)
-      require("bufferline").setup(opts)
-    end,
-  },
-
-  -- Syntax
-  {
-    "nvim-treesitter/nvim-treesitter",
-    event = { "BufReadPost", "BufNewFile" },
-    cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
-    build = ":TSUpdate",
-    opts = function()
-      return require("configs.treesitter")
-    end,
-    config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
-    end,
-  },
-
-  { "MaxMEllon/vim-jsx-pretty",     ft = { "javascriptreact", "typescriptreact" } },
-
-  {
-    "norcalli/nvim-colorizer.lua",
-    opts = function()
-      return require("configs.others").colorizer
-    end,
-    config = function(_, opts)
-      require("colorizer").setup(opts)
-
-      vim.defer_fn(function()
-        require("colorizer").attach_to_buffer(0)
-      end, 0)
-    end,
-  },
-
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    main = "ibl",
-    event = { "BufReadPost", "BufNewFile" },
-    opts = function()
-      return require("configs.others").blankline
-    end,
-    config = function(_, opts)
-      require("ibl").setup(opts)
-    end,
-  },
-
-  { "vim-pandoc/vim-pandoc",        ft = { "markdown", "pandoc", "vimwiki" } },
-  { "vim-pandoc/vim-pandoc-syntax", ft = { "markdown", "pandoc", "vimwiki" } },
-  { "elzr/vim-json",                ft = { "json" } },
-  { "chrisbra/csv.vim",             ft = { "csv" } },
-
-  { "liuchengxu/graphviz.vim",      ft = { "gv", "dot" } },
-
-  -- Git Integration
-  {
-    "lewis6991/gitsigns.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    cmd = { "Gitsigns" },
-    opts = function()
-      return require("configs.others").gitsigns
-    end,
-    config = function(_, opts)
-      require("gitsigns").setup(opts)
-    end,
-  },
-
-  { "tpope/vim-fugitive",            lazy = true,       cmd = { "G", "Git" } },
-
-  -- File explorer, picker etc
-  {
-    "nvim-tree/nvim-tree.lua",
-    cmd = { "NvimTreeToggle", "NvimTreeFocus" },
-    opts = function()
-      return require("configs.nvimtree")
-    end,
-    config = function(_, opts)
-      require("nvim-tree").setup(opts)
-    end,
-  },
-
-  {
-    "nvim-telescope/telescope.nvim",
-    cmd = "Telescope",
-    dependencies = {
-      {
-        "nvim-lua/plenary.nvim",
-      },
-      {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = "make",
-      },
-      {
-        "nvim-telescope/telescope-media-files.nvim",
-      },
-    },
-    opts = function()
-      return require("configs.telescope")
-    end,
-    config = function(_, opts)
-      local telescope = require("telescope")
-      telescope.setup(opts)
-
-      -- load extensions
-
-      pcall(function()
-        telescope.load_extension({ "fzf", "media_files" })
-      end)
-    end,
-  },
-
   -- auto-completion engine
   {
     "hrsh7th/nvim-cmp",
@@ -196,12 +59,7 @@ local plugins_list = {
     end,
   },
 
-  -- auto-completion for cmdline
-  {
-    "gelguy/wilder.nvim",
-    lazy = true,
-  },
-
+  -- LSP
   {
     "williamboman/mason.nvim",
     cmd = { "Mason", "MasonInstall", "MasonUninstall", "MasonUninstallAll", "MasonLog" },
@@ -220,7 +78,6 @@ local plugins_list = {
     end,
   },
 
-  -- LSP
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
@@ -233,9 +90,177 @@ local plugins_list = {
   {
     "nvimtools/none-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "nvim-lua/plenary.nvim", "nvimtools/none-ls-extras.nvim" }
+    dependencies = { "nvim-lua/plenary.nvim", "nvimtools/none-ls-extras.nvim" },
   },
 
+  {
+    "linrongbin16/lsp-progress.nvim",
+    opts = function()
+      return require("configs.lsp.progress")
+    end,
+    config = function(_, opts)
+      -- vim.cmd([[hi LspProgressMessageCompleted ctermfg=Green guifg=Green]])
+      require("lsp-progress").setup(opts)
+    end,
+  },
+  -- Syntax
+  {
+    "nvim-treesitter/nvim-treesitter",
+    event = { "BufReadPost", "BufNewFile" },
+    cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
+    build = ":TSUpdate",
+    opts = function()
+      return require("configs.treesitter")
+    end,
+    config = function(_, opts)
+      require("nvim-treesitter.configs").setup(opts)
+    end,
+  },
+
+  { "MaxMEllon/vim-jsx-pretty", ft = { "javascriptreact", "typescriptreact" } },
+
+  {
+    "norcalli/nvim-colorizer.lua",
+    opts = function()
+      return require("configs.others").colorizer
+    end,
+    config = function(_, opts)
+      require("colorizer").setup(opts)
+
+      vim.defer_fn(function()
+        require("colorizer").attach_to_buffer(0)
+      end, 0)
+    end,
+  },
+
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    event = { "BufReadPost", "BufNewFile" },
+    opts = function()
+      return require("configs.others").blankline
+    end,
+    config = function(_, opts)
+      require("ibl").setup(opts)
+    end,
+  },
+
+  { "vim-pandoc/vim-pandoc", ft = { "markdown", "pandoc", "vimwiki" } },
+  { "vim-pandoc/vim-pandoc-syntax", ft = { "markdown", "pandoc", "vimwiki" } },
+  { "elzr/vim-json", ft = { "json" } },
+  { "chrisbra/csv.vim", ft = { "csv" } },
+
+  { "liuchengxu/graphviz.vim", ft = { "gv", "dot" } },
+
+  -- Git Integration
+  {
+    "lewis6991/gitsigns.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    event = { "User InGitRepo" },
+    cmd = { "Gitsigns" },
+    opts = function()
+      return require("configs.others").gitsigns
+    end,
+    config = function(_, opts)
+      require("gitsigns").setup(opts)
+    end,
+  },
+
+  { "tpope/vim-fugitive", event = "User InGitRepo", lazy = true, cmd = { "G", "Git" } },
+
+  -- File explorer, picker etc
+  {
+    "nvim-tree/nvim-tree.lua",
+    cmd = { "NvimTreeToggle", "NvimTreeFocus" },
+    opts = function()
+      return require("configs.nvimtree")
+    end,
+    config = function(_, opts)
+      require("nvim-tree").setup(opts)
+    end,
+  },
+
+  {
+    "nvim-telescope/telescope.nvim",
+    cmd = "Telescope",
+    dependencies = {
+      {
+        "nvim-lua/plenary.nvim",
+      },
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "make",
+      },
+      {
+        "nvim-telescope/telescope-media-files.nvim",
+      },
+    },
+    opts = function()
+      return require("configs.telescope")
+    end,
+    config = function(_, opts)
+      local telescope = require("telescope")
+      telescope.setup(opts)
+
+      -- load extensions
+
+      pcall(function()
+        telescope.load_extension({ "fzf", "media_files" })
+      end)
+    end,
+  },
+
+  -- Icon
+  {
+    "nvim-tree/nvim-web-devicons",
+  },
+
+  -- StatusLine & Bufferline
+  {
+    "nvim-lualine/lualine.nvim",
+    event = "VimEnter",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = function()
+      return require("configs.lualine")
+    end,
+    config = function(_, opts)
+      require("lualine").setup(opts)
+    end,
+  },
+
+  {
+    "akinsho/bufferline.nvim",
+    event = "VeryLazy",
+    version = "*",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = function()
+      return require("configs.bufferline")
+    end,
+    config = function(_, opts)
+      require("bufferline").setup(opts)
+    end,
+  },
+
+  -- notification
+  {
+    "rcarriga/nvim-notify",
+    event = "VeryLazy",
+    opts = {
+      stages = "fade_in_slide_out",
+      timeout = 1500,
+      background_colour = "#2E3440",
+    },
+    config = function(_, opts)
+      local nvim_notify = require("notify")
+      nvim_notify.setup(opts)
+      vim.notify = nvim_notify
+    end,
+  },
+  -- auto-completion for cmdline
+  {
+    "gelguy/wilder.nvim",
+    lazy = true,
+  },
 
   {
     "folke/trouble.nvim",
@@ -278,16 +303,16 @@ local plugins_list = {
   { "ofirgall/goto-breakpoints.nvim" },
   -- Edit
 
-  { "tpope/vim-unimpaired",          event = "VimEnter" },
-  { "tpope/vim-repeat",              event = "VimEnter" },
-  { "tpope/vim-endwise",             event = "VimEnter" },
-  { "tpope/vim-surround",            event = "VimEnter" },
-  { "tpope/vim-abolish",             event = "VimEnter" },
-  { "tpope/vim-commentary",          event = "VimEnter" },
-  { "tpope/vim-sleuth",              event = "VimEnter" },
-  { "tpope/vim-dispatch",            lazy = true },
+  { "tpope/vim-unimpaired", event = "VimEnter" },
+  { "tpope/vim-repeat", event = "VimEnter" },
+  { "tpope/vim-endwise", event = "VimEnter" },
+  { "tpope/vim-surround", event = "VimEnter" },
+  { "tpope/vim-abolish", event = "VimEnter" },
+  { "tpope/vim-commentary", event = "VimEnter" },
+  { "tpope/vim-sleuth", event = "VimEnter" },
+  { "tpope/vim-dispatch", lazy = true },
   { "radenling/vim-dispatch-neovim", lazy = true },
-  { "andymass/vim-matchup",          lazy = true },
+  { "andymass/vim-matchup", lazy = true },
   {
     "Pocco81/true-zen.nvim",
     opts = function()
@@ -350,17 +375,6 @@ local plugins_list = {
     end,
   },
 
-  -- notification
-  {
-    "rcarriga/nvim-notify",
-    event = "BufEnter",
-    config = function()
-      vim.defer_fn(function()
-        require("configs.notify")
-      end, 2000)
-    end,
-  },
-
   -- UI
   {
     "sainnhe/gruvbox-material",
@@ -408,9 +422,9 @@ local plugins_list = {
     end,
     ft = { "vimwiki" },
   },
-  { "blindFS/vim-taskwarrior",     ft = { "vimwiki" } },
+  { "blindFS/vim-taskwarrior", ft = { "vimwiki" } },
   { "powerman/vim-plugin-AnsiEsc", ft = { "vimwiki" } },
-  { "mattn/calendar-vim",          ft = { "vimwiki" } },
+  { "mattn/calendar-vim", ft = { "vimwiki" } },
 }
 
 function M.load()

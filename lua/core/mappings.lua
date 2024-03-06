@@ -55,7 +55,7 @@ keymap.set("n", "<leader>cp", "<cmd>let @+=expand('%:p')<CR>")
 keymap.set("n", "<leader><leader>", "<cmd>lua require('telescope.builtin').find_files()<cr>", { silent = true })
 keymap.set("n", "<leader><Enter>", "<cmd>lua require('telescope.builtin').buffers()<cr>", { silent = true })
 keymap.set("n", "<C-t>", "<cmd>lua require('telescope.builtin').tags()<cr>", { silent = true })
-keymap.set("n", "<leader>a", "<cmd>lua require('telescope.builtin').live_grep()<cr>")
+keymap.set("n", "<C-f>", "<cmd>lua require('telescope.builtin').live_grep()<cr>")
 keymap.set("n", "<leader>m", "<cmd>lua require('telescope').extensions.media_files.media_files()<cr>")
 keymap.set("n", "<leader>gs", "<cmd>lua require('telescope.builtin').grep_string()<cr>")
 

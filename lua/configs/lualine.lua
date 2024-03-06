@@ -1,36 +1,13 @@
 local function lsp_progress()
-  local Lsp = vim.lsp.util.get_progress_messages()[1]
-  if Lsp then
-    local msg = Lsp.message or ""
-    local percentage = Lsp.percentage or 0
-    local title = Lsp.title or ""
-    local spinners = {
-      "🌑 ",
-      "🌒 ",
-      "🌓 ",
-      "🌔 ",
-      "🌕 ",
-      "🌖 ",
-      "🌗 ",
-      "🌘 ",
-    }
+  return require("lsp-progress").progress({
+    format = function(messages)
+      local active_clients_count = #vim.lsp.get_active_clients()
+      local lsp_icon = active_clients_count > 0 and " LSP" or ""
 
-    local success_icon = {
-      "",
-      "",
-      "",
-    }
-
-    local ms = vim.loop.hrtime() / 1000000
-    local frame = math.floor(ms / 120) % #spinners
-
-    if percentage >= 70 then
-      return string.format(" %%<%s %s %s (%s%%%%) ", success_icon[frame + 1], title, msg, percentage)
-    else
-      return string.format(" %%<%s %s %s (%s%%%%) ", spinners[frame + 1], title, msg, percentage)
-    end
-  end
-  return ""
+      local lsp_status = #messages > 0 and table.concat(messages, " ") or ""
+      return lsp_icon .. lsp_status
+    end,
+  })
 end
 
 local function diff_source()
@@ -46,7 +23,7 @@ end
 
 local options = {
   options = {
-    -- theme = 'gruvbox-material',
+    theme = 'gruvbox-material',
     component_separators = { left = icons.ui.LineLeft, right = icons.ui.LineMiddle },
     section_separators = { left = icons.ui.BoldDividerLeft, right = icons.ui.HalfCircleLeft },
   },
@@ -74,6 +51,7 @@ local options = {
           info = icons.diagnostics.BoldInformation .. " ",
           hint = icons.diagnostics.BoldHint .. " ",
         },
+        separator = { right = "" },
       },
       lsp_progress,
     },
