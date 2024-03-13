@@ -12,6 +12,9 @@ require("bootstrap").init(lazy_dir)
 
 require("plugins").load()
 
-require("core.autocmds")
+require("core.autocmds").load_defaults()
 
 require("core.mappings")
+
+local commands = require("core.commands")
+commands.load(commands.defaults)

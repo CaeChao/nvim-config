@@ -41,14 +41,12 @@ local plugins_list = {
         end,
       },
       -- nvim-cmp completion sources
-      {
-        "saadparwaiz1/cmp_luasnip",
-        "hrsh7th/cmp-nvim-lua",
-        "hrsh7th/cmp-nvim-lsp",
-        "hrsh7th/cmp-buffer",
-        "hrsh7th/cmp-path",
-        "f3fora/cmp-spell",
-      },
+      { "saadparwaiz1/cmp_luasnip", lazy = true },
+      { "hrsh7th/cmp-nvim-lua", lazy = true },
+      { "hrsh7th/cmp-nvim-lsp", lazy = true },
+      { "hrsh7th/cmp-buffer", lazy = true },
+      { "hrsh7th/cmp-path", lazy = true },
+      { "f3fora/cmp-spell", lazy = true },
       --  { 'honza/vim-snippets', event = 'InsertEnter' }
     },
     opts = function()
@@ -67,6 +65,7 @@ local plugins_list = {
     config = function()
       require("mason").setup({})
     end,
+    lazy = true,
   },
 
   {
@@ -76,6 +75,7 @@ local plugins_list = {
     config = function()
       require("mason-lspconfig").setup({})
     end,
+    lazy = true,
   },
 
   {
@@ -85,12 +85,25 @@ local plugins_list = {
     config = function()
       require("configs.lsp").setup()
     end,
+    lazy = true,
   },
 
   {
     "nvimtools/none-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = { "nvim-lua/plenary.nvim", "nvimtools/none-ls-extras.nvim" },
+    lazy = true,
+  },
+
+  {
+    "pmizio/typescript-tools.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    ft = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue" },
+    lazy = true,
+    opts = {},
+    config = function()
+      require("typescript-tools").setup()
+    end,
   },
 
   {
@@ -102,6 +115,7 @@ local plugins_list = {
       -- vim.cmd([[hi LspProgressMessageCompleted ctermfg=Green guifg=Green]])
       require("lsp-progress").setup(opts)
     end,
+    lazy = true,
   },
   -- Syntax
   {
@@ -131,6 +145,7 @@ local plugins_list = {
         require("colorizer").attach_to_buffer(0)
       end, 0)
     end,
+    lazy = true,
   },
 
   {
@@ -180,6 +195,8 @@ local plugins_list = {
     end,
   },
 
+  { "Tastyep/structlog.nvim", lazy = true },
+
   {
     "nvim-telescope/telescope.nvim",
     cmd = "Telescope",
@@ -208,6 +225,7 @@ local plugins_list = {
         telescope.load_extension({ "fzf", "media_files" })
       end)
     end,
+    lazy = true,
   },
 
   -- Icon
@@ -218,7 +236,7 @@ local plugins_list = {
   -- StatusLine & Bufferline
   {
     "nvim-lualine/lualine.nvim",
-    event = "VimEnter",
+    event = "VeryLazy",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = function()
       return require("configs.lualine")
@@ -277,8 +295,6 @@ local plugins_list = {
     end,
   },
 
-  -- "jose-elias-alvarez/nvim-lsp-ts-utils",
-
   -- Debugger
   {
     "mfussenegger/nvim-dap",
@@ -291,6 +307,7 @@ local plugins_list = {
         require("configs.dap").setup_ui(opts)
       end,
     },
+    lazy = true,
   },
   {
     "Weissle/persistent-breakpoints.nvim",
