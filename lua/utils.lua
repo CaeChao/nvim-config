@@ -65,7 +65,8 @@ function M.reset_cache()
     end
   end
   Log:trace(string.format("Cache invalidated for core modules: { %s }", table.concat(nvim_modules, ", ")))
-  require("configs.lsp.templates").generate_templates()
+  local lsp_config = require("configs.lsp.config")
+  require("configs.lsp.templates").generate_templates(lsp_config.automatic_configuration.ensure_installed)
 end
 
 return M

@@ -13,8 +13,9 @@ function M.setup()
     sources = {
       require("none-ls.code_actions.eslint_d"),
       require("none-ls.diagnostics.eslint_d"),
+      -- null_ls.builtins.diagnostics.selene,
+      require("none-ls-luacheck.diagnostics.luacheck"),
       null_ls.builtins.formatting.prettier.with({
-        prefer_local = "node_modules/.bin",
         filetypes = { "html", "scss", "less", "css", "json", "yaml", "markdown" },
       }),
       null_ls.builtins.code_actions.gitsigns.with({
@@ -30,9 +31,7 @@ function M.setup()
           "json",
         },
       }),
-      null_ls.builtins.formatting.stylua.with({
-        extra_args = { "--config-path", vim.fn.expand("~/.config/stylua.toml") },
-      }),
+      null_ls.builtins.formatting.stylua,
       null_ls.builtins.completion.luasnip.with({
         filetypes = {
           "javascript",

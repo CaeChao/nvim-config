@@ -1,4 +1,5 @@
 local ensure_installed = {
+  "jsonls",
   "lua_ls",
   "pylsp",
   "vimls",

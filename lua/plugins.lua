@@ -26,8 +26,9 @@ local plugins_list = {
       -- autopairing of (){}[] etc
       {
         "windwp/nvim-autopairs",
+        event = "InsertEnter",
         opts = {
-          disable_filetype = { "TelescopePrompt", "vim" },
+          disable_filetype = { "TelescopePrompt", "vim", "spectre_panel" },
           map_cr = false,
           history = true,
           updateevents = "TextChanged,TextChangedI",
@@ -54,6 +55,17 @@ local plugins_list = {
     end,
     config = function(_, opts)
       require("cmp").setup(opts)
+    end,
+  },
+  {
+    "folke/neodev.nvim",
+    lazy = true,
+  },
+  -- auto-completion for cmdline
+  {
+    "gelguy/wilder.nvim",
+    config = function()
+      require("wilder").setup({ modes = { ":", "/", "?" } })
     end,
   },
 
@@ -91,7 +103,11 @@ local plugins_list = {
   {
     "nvimtools/none-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "nvim-lua/plenary.nvim", "nvimtools/none-ls-extras.nvim" },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvimtools/none-ls-extras.nvim",
+      "gbprod/none-ls-luacheck.nvim",
+    },
     lazy = true,
   },
 
@@ -160,7 +176,13 @@ local plugins_list = {
     end,
   },
 
-  { "vim-pandoc/vim-pandoc", ft = { "markdown", "pandoc", "vimwiki" } },
+  {
+    "vim-pandoc/vim-pandoc",
+    ft = { "markdown", "pandoc", "vimwiki" },
+    init = function()
+      vim.g["pandoc#folding#level"] = 3
+    end,
+  },
   { "vim-pandoc/vim-pandoc-syntax", ft = { "markdown", "pandoc", "vimwiki" } },
   { "elzr/vim-json", ft = { "json" } },
   { "chrisbra/csv.vim", ft = { "csv" } },
@@ -194,8 +216,6 @@ local plugins_list = {
       require("nvim-tree").setup(opts)
     end,
   },
-
-  { "Tastyep/structlog.nvim", lazy = true },
 
   {
     "nvim-telescope/telescope.nvim",
@@ -260,6 +280,8 @@ local plugins_list = {
   },
 
   -- notification
+  { "Tastyep/structlog.nvim", lazy = true },
+
   {
     "rcarriga/nvim-notify",
     event = "VeryLazy",
@@ -273,11 +295,6 @@ local plugins_list = {
       nvim_notify.setup(opts)
       vim.notify = nvim_notify
     end,
-  },
-  -- auto-completion for cmdline
-  {
-    "gelguy/wilder.nvim",
-    lazy = true,
   },
 
   {
@@ -297,16 +314,11 @@ local plugins_list = {
 
   -- Debugger
   {
-    "mfussenegger/nvim-dap",
-    dependencies = {
-      -- fancy UI for the debugger
-      "rcarriga/nvim-dap-ui",
-      -- stylua: ignore
-      opts = {},
-      config = function(_, opts)
-        require("configs.dap").setup_ui(opts)
-      end,
-    },
+    "rcarriga/nvim-dap-ui",
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+    config = function(_, opts)
+      require("configs.dap").setup_ui(opts)
+    end,
     lazy = true,
   },
   {
@@ -318,8 +330,8 @@ local plugins_list = {
     end,
   },
   { "ofirgall/goto-breakpoints.nvim" },
-  -- Edit
 
+  -- Edit
   { "tpope/vim-unimpaired", event = "VimEnter" },
   { "tpope/vim-repeat", event = "VimEnter" },
   { "tpope/vim-endwise", event = "VimEnter" },
@@ -328,6 +340,7 @@ local plugins_list = {
   { "tpope/vim-commentary", event = "VimEnter" },
   { "tpope/vim-sleuth", event = "VimEnter" },
   { "tpope/vim-dispatch", lazy = true },
+  { "tpope/vim-eunuch", lazy = true }, -- Unix cmd helper
   { "radenling/vim-dispatch-neovim", lazy = true },
   { "andymass/vim-matchup", lazy = true },
   {
@@ -354,7 +367,6 @@ local plugins_list = {
   },
 
   -- Tags
-  -- if utils.executable("ctags") then
   -- show file tags in vim window
   {
     "liuchengxu/vista.vim",
@@ -410,6 +422,40 @@ local plugins_list = {
   -- { "christianchiarulli/nvcode-color-schemes.vim", lazy = true },
 
   --  {'vim-ctrlspace/vim-ctrlspace'}
+  -- Interactive development environment
+  {
+    "Olical/conjure",
+    ft = { "clojure", "fennel", "python", "scheme" }, -- etc
+    -- [Optional] cmp-conjure for cmp
+    dependencies = {
+      {
+        "PaterJason/cmp-conjure",
+        config = function()
+          local cmp = require("cmp")
+          local config = cmp.get_config()
+          table.insert(config.sources, {
+            name = "buffer",
+            option = {
+              sources = {
+                { name = "conjure" },
+              },
+            },
+          })
+          cmp.setup(config)
+        end,
+      },
+    },
+    config = function(_, opts)
+      require("conjure.main").main()
+      require("conjure.mapping")["on-filetype"]()
+      vim.g["conjure#mapping#prefix"] = "'"
+      vim.g["conjure#mapping#doc_word"] = "gk"
+    end,
+    init = function()
+      -- Set configuration options here
+      vim.g["conjure#debug"] = true
+    end,
+  },
 
   -- Note Taking
   {
@@ -417,7 +463,10 @@ local plugins_list = {
     init = function()
       require("configs.vimwiki").vimwiki()
     end,
-    ft = { "vimwiki", "markdown", "pandoc" },
+    event = {
+      "BufReadPre " .. vim.fn.expand("~") .. "/Documents/wikiNotes/task/**.md",
+      "BufNewFile " .. vim.fn.expand("~") .. "/Documents/wikiNotes/task/**.md",
+    },
     config = function()
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "vimwiki",
@@ -430,18 +479,34 @@ local plugins_list = {
     init = function()
       require("configs.vimwiki").zettel()
     end,
-    ft = { "vimwiki" },
+    ft = { "vimwiki", "markdown", "pandoc" },
   },
   {
     "tools-life/taskwiki",
     init = function()
       require("configs.vimwiki").taskwiki()
     end,
-    ft = { "vimwiki" },
+    ft = { "vimwiki", "markdown", "pandoc" },
   },
-  { "blindFS/vim-taskwarrior", ft = { "vimwiki" } },
-  { "powerman/vim-plugin-AnsiEsc", ft = { "vimwiki" } },
-  { "mattn/calendar-vim", ft = { "vimwiki" } },
+  { "blindFS/vim-taskwarrior", ft = { "vimwiki", "markdown", "pandoc" } },
+  { "powerman/vim-plugin-AnsiEsc", ft = { "vimwiki", "markdown", "pandoc" } },
+  { "mattn/calendar-vim", ft = { "vimwiki", "markdown", "pandoc" } },
+
+  {
+    "epwalsh/obsidian.nvim",
+    tag = "*",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    event = {
+      "BufReadPre " .. vim.fn.expand("~") .. "/Documents/wikiNotes/**.md",
+      "BufNewFile " .. vim.fn.expand("~") .. "/Documents/wikiNotes/**.md",
+    },
+    config = function()
+      local opts = require("configs.obsidian")
+      require("obsidian").setup(opts)
+    end,
+  },
 }
 
 function M.load()

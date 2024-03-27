@@ -7,20 +7,21 @@ M.vimwiki = function()
   vim.g.vimwiki_table_mappings = 0
   vim.g.vimwiki_create_link = 0
   vim.g.vimwiki_valid_html_tags = "b,i,s,u,sub,sup,kbd,br,hr, pre, script"
-  -- vim.g.vimwiki_filetypes = { "markdown", "pandoc" }
+  vim.g.vimwiki_filetypes = { "markdown", "pandoc" }
+  vim.g.vimwiki_tag_format = { pre = [[\(^[ -]*tags\s*:.*\)\@<=]], pre_mark = ":", post_mark = ":", sep = ":" }
   vim.g.vimwiki_list = {
     {
-      path = "~/Documents/vimwiki",
+      path = "~/Documents/wikiNotes",
       diary_rel_path = "/",
-      path_html = "~/Documents/vimwiki/wiki_html",
-      template_path = "~/Documents/vimwiki/templates",
+      path_html = "~/Documents/wikiNotes/wiki_html",
+      template_path = "~/Documents/wikiNotes/templates",
       template_default = "def_template",
       template_ext = ".html",
       syntax = "markdown",
       ext = ".md",
       auto_tags = 1,
       generated_links_caption = 1,
-      custom_wiki2html = "~/Documents/vimwiki/wiki2html.sh",
+      custom_wiki2html = "~/Documents/wikiNotes/wiki2html.sh",
       nested_syntaxes = { python = "python", ["c++"] = "cpp" },
     },
   }
